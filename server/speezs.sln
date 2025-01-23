@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speezs.API", "speezs.API\speezs.API.csproj", "{6CB8A548-65AC-49DD-8FCC-399BCC9A395A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation", "1. Presentation", "{5B151971-0121-451D-8D8B-D681BC5C01DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Services", "2. Services", "{150964B1-856C-4E24-BBD7-5A71240DB599}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Repositories", "3. Repositories", "{3E53DBEB-E7D6-42DB-BA2C-D82D08A40859}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speezs.Services", "speezs.Services\speezs.Services.csproj", "{B6D87AC2-81DF-4CFC-83E1-A9A1CF760065}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Data Access", "4. Data Access", "{C4DFF3A4-61FB-4D3E-83CA-EC13DBC16698}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speezs.Repositories", "speezs.Repositories\speezs.Repositories.csproj", "{F5D742CA-D15C-41B8-9184-F70861D1A508}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "speezs.DataAccess", "speezs.DataAccess\speezs.DataAccess.csproj", "{9760AA08-5B1C-430C-8697-2F63A2FFF21A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CB8A548-65AC-49DD-8FCC-399BCC9A395A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB8A548-65AC-49DD-8FCC-399BCC9A395A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB8A548-65AC-49DD-8FCC-399BCC9A395A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB8A548-65AC-49DD-8FCC-399BCC9A395A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6D87AC2-81DF-4CFC-83E1-A9A1CF760065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D87AC2-81DF-4CFC-83E1-A9A1CF760065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D87AC2-81DF-4CFC-83E1-A9A1CF760065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D87AC2-81DF-4CFC-83E1-A9A1CF760065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5D742CA-D15C-41B8-9184-F70861D1A508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D742CA-D15C-41B8-9184-F70861D1A508}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D742CA-D15C-41B8-9184-F70861D1A508}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D742CA-D15C-41B8-9184-F70861D1A508}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9760AA08-5B1C-430C-8697-2F63A2FFF21A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9760AA08-5B1C-430C-8697-2F63A2FFF21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9760AA08-5B1C-430C-8697-2F63A2FFF21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9760AA08-5B1C-430C-8697-2F63A2FFF21A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6CB8A548-65AC-49DD-8FCC-399BCC9A395A} = {5B151971-0121-451D-8D8B-D681BC5C01DD}
+		{B6D87AC2-81DF-4CFC-83E1-A9A1CF760065} = {150964B1-856C-4E24-BBD7-5A71240DB599}
+		{F5D742CA-D15C-41B8-9184-F70861D1A508} = {3E53DBEB-E7D6-42DB-BA2C-D82D08A40859}
+		{9760AA08-5B1C-430C-8697-2F63A2FFF21A} = {C4DFF3A4-61FB-4D3E-83CA-EC13DBC16698}
+	EndGlobalSection
+EndGlobal
