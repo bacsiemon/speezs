@@ -3,17 +3,17 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace speezs.DataAccess.Models;
 
 public partial class SpeezsDbContext : DbContext
 {
-    public SpeezsDbContext()
-    {
-    }
+	public SpeezsDbContext() : base()
+	{
+		
+	}
 
-    public SpeezsDbContext(DbContextOptions<SpeezsDbContext> options)
+	public SpeezsDbContext(DbContextOptions<SpeezsDbContext> options)
         : base(options)
     {
     }
@@ -40,20 +40,7 @@ public partial class SpeezsDbContext : DbContext
 
     public virtual DbSet<UserSubscription> UserSubscriptions { get; set; }
 
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-	{
-		if (!optionsBuilder.IsConfigured)
-		{
-			IConfigurationRoot configuration = new ConfigurationBuilder()
-.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-.AddJsonFile("appsettings.json")
-.Build();
-			optionsBuilder.UseSqlServer(configuration.GetConnectionString("DBConnection"));
-		}
-	}
-
-
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CollectionLook>(entity =>
         {
@@ -341,6 +328,8 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.ProfileImageUrl)
                 .HasMaxLength(255)
                 .HasColumnName("profile_image_url");
+            entity.Property(e => e.RefreshToken).HasMaxLength(64);
+            entity.Property(e => e.RefreshTokenExpiry).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<UserPreference>(entity =>

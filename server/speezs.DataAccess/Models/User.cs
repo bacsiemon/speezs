@@ -31,6 +31,10 @@ public partial class User
 
     public DateTime? DateDeleted { get; set; }
 
+    public string RefreshToken { get; set; }
+
+    public DateTime? RefreshTokenExpiry { get; set; }
+
     public virtual ICollection<FavoriteCollection> FavoriteCollections { get; set; } = new List<FavoriteCollection>();
 
     public virtual ICollection<Look> Looks { get; set; } = new List<Look>();
