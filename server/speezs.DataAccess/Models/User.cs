@@ -13,13 +13,13 @@ public partial class User
 
     public string PasswordHash { get; set; }
 
-    public string FirstName { get; set; }
+    public string PasswordSalt { get; set; }
 
-    public string LastName { get; set; }
+    public string PhoneNumber { get; set; }
+
+    public string FullName { get; set; }
 
     public string ProfileImageUrl { get; set; }
-
-    public bool? IsPremium { get; set; }
 
     public DateTime? LastLogin { get; set; }
 

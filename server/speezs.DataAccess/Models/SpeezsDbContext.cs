@@ -8,12 +8,7 @@ namespace speezs.DataAccess.Models;
 
 public partial class SpeezsDbContext : DbContext
 {
-	public SpeezsDbContext() : base()
-	{
-		
-	}
-
-	public SpeezsDbContext(DbContextOptions<SpeezsDbContext> options)
+    public SpeezsDbContext(DbContextOptions<SpeezsDbContext> options)
         : base(options)
     {
     }
@@ -37,6 +32,8 @@ public partial class SpeezsDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserPreference> UserPreferences { get; set; }
+
+    public virtual DbSet<UserResetPasswordCode> UserResetPasswordCodes { get; set; }
 
     public virtual DbSet<UserSubscription> UserSubscriptions { get; set; }
 
@@ -306,25 +303,26 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.DateModified).HasColumnType("datetime");
             entity.Property(e => e.Email)
                 .IsRequired()
-                .HasMaxLength(255)
+                .HasMaxLength(128)
                 .HasColumnName("email");
-            entity.Property(e => e.FirstName)
+            entity.Property(e => e.FullName)
                 .HasMaxLength(100)
-                .HasColumnName("first_name");
+                .HasColumnName("full_name");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
-            entity.Property(e => e.IsPremium)
-                .HasDefaultValue(false)
-                .HasColumnName("is_premium");
             entity.Property(e => e.LastLogin)
                 .HasColumnType("datetime")
                 .HasColumnName("last_login");
-            entity.Property(e => e.LastName)
-                .HasMaxLength(100)
-                .HasColumnName("last_name");
             entity.Property(e => e.PasswordHash)
                 .IsRequired()
-                .HasMaxLength(255)
+                .HasMaxLength(64)
                 .HasColumnName("password_hash");
+            entity.Property(e => e.PasswordSalt)
+                .IsRequired()
+                .HasMaxLength(64)
+                .HasColumnName("password_salt");
+            entity.Property(e => e.PhoneNumber)
+                .HasMaxLength(10)
+                .HasColumnName("phone_number");
             entity.Property(e => e.ProfileImageUrl)
                 .HasMaxLength(255)
                 .HasColumnName("profile_image_url");
@@ -367,6 +365,22 @@ public partial class SpeezsDbContext : DbContext
             entity.HasOne(d => d.User).WithOne(p => p.UserPreference)
                 .HasForeignKey<UserPreference>(d => d.UserId)
                 .HasConstraintName("FK__UserPrefe__user___5CD6CB2B");
+        });
+
+        modelBuilder.Entity<UserResetPasswordCode>(entity =>
+        {
+            entity.HasKey(e => e.Email);
+
+            entity.Property(e => e.Email)
+                .HasMaxLength(128)
+                .HasColumnName("email");
+            entity.Property(e => e.CodeHash)
+                .IsRequired()
+                .HasMaxLength(64)
+                .HasColumnName("code_hash");
+            entity.Property(e => e.Expire)
+                .HasColumnType("datetime")
+                .HasColumnName("expire");
         });
 
         modelBuilder.Entity<UserSubscription>(entity =>

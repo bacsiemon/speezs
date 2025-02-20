@@ -10,7 +10,6 @@ namespace speezs.DataAccess
 {
 	public class UnitOfWork
 	{
-		private SpeezsDbContext _context;
 		private CollectionLookRepository _collectionLookRepository;
 		private FavoriteCollectionRepository _favoriteCollectionRepository;
 		private LookProductRepository _lookProductRepository;
@@ -22,10 +21,11 @@ namespace speezs.DataAccess
 		private UserPreferenceRepository _userPreferenceRepository;
 		private UserRepository _userRepository;
 		private UserSubscriptionRepository _userSubscriptionRepository;
+		private UserResetPasswordCodeRepository _userResetPasswordCodeRepository;
 
 		public UnitOfWork()
 		{
-			_context ??= new SpeezsDbContext();
+
 		}
 
 		public CollectionLookRepository CollectionLookRepository { get { return _collectionLookRepository ??= new(); } }
@@ -39,5 +39,6 @@ namespace speezs.DataAccess
 		public UserPreferenceRepository UserPreferenceRepository { get { return _userPreferenceRepository ??= new(); } }
 		public UserRepository UserRepository { get { return _userRepository ??= new(); } }
 		public UserSubscriptionRepository UserSubscriptionRepository { get { return _userSubscriptionRepository ??= new(); } }
+		public UserResetPasswordCodeRepository UserResetPasswordCodeRepository { get { return _userResetPasswordCodeRepository ??= new(); } }
 	}
 }

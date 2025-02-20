@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 namespace speezs.DataAccess.Repositories
 {
 	public class SubscriptionTierRepository : GenericRepository<SubscriptionTier>
-	{
+	{ 
 	}
 }

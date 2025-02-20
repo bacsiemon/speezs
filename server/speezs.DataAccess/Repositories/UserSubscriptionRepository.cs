@@ -10,5 +10,6 @@ namespace speezs.DataAccess.Repositories
 {
 	public class UserSubscriptionRepository : GenericRepository<UserSubscription>
 	{
+
 	}
 }

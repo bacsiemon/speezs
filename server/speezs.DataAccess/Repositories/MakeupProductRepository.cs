@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace speezs.DataAccess.Repositories
 {
 	public class MakeupProductRepository : GenericRepository<MakeupProduct>
-	{s
+	{
+
 	}
 }

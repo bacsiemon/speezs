@@ -10,11 +10,16 @@ namespace speezs.DataAccess.Base
 {
 	public class GenericRepository<T> where T : class
 	{
-		private SpeezsDbContext _context;
+		protected SpeezsDbContext _context;
 
 		public GenericRepository()
 		{
-			_context ??= new SpeezsDbContext();
+
+		}
+
+		public GenericRepository(SpeezsDbContext context)
+		{
+			_context = context;
 		}
 
 		public List<T> GetAll()
