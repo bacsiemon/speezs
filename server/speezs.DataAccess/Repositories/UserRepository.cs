@@ -11,7 +11,9 @@ namespace speezs.DataAccess.Repositories
 {
 	public class UserRepository : GenericRepository<User>
 	{
-
+		public UserRepository(SpeezsDbContext context) : base(context)
+		{
+		}
 
 		public async Task<User?> GetByEmailAsync(string email)
 		{

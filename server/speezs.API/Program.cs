@@ -11,7 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-DependencyInjection.Configure(builder);
+DependencyInjectionConfiguration.Configure(builder);
+JwtConfiguration.Configure(builder);
 
 var app = builder.Build();
 

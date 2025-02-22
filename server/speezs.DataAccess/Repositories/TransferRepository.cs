@@ -10,6 +10,8 @@ namespace speezs.DataAccess.Repositories
 {
 	public class TransferRepository : GenericRepository<Transfer>
 	{
-
+		public TransferRepository(SpeezsDbContext context) : base(context)
+		{
+		}
 	}
 }

@@ -10,6 +10,8 @@ namespace speezs.DataAccess.Repositories
 {
 	public class LookRepository : GenericRepository<Look>
 	{
-
+		public LookRepository(SpeezsDbContext context) : base(context)
+		{
+		}
 	}
 }

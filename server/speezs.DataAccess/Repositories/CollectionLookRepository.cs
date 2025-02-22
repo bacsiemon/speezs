@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class CollectionLookRepository : GenericRepository<CollectionLook>
+	public class CollectionLookRepository : GenericRepository<Collectionlook>
 	{
-
+		public CollectionLookRepository(SpeezsDbContext context) : base(context)
+		{
+		}
 	}
 }

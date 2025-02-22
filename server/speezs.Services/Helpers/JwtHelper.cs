@@ -31,10 +31,9 @@ namespace speezs.Services.Helpers
 				{
 					new Claim("UserId", user.UserId.ToString()),
 					new Claim(ClaimTypes.Name, user.FullName),
-					new Claim("Phone", user.PhoneNumber),
 					new Claim(ClaimTypes.Email, user.Email),
 				}),
-				Expires = DateTime.UtcNow.AddMinutes(120),
+				Expires = DateTime.Now.AddMinutes(120),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)
 			};
 			var token = jwtTokenHandler.WriteToken(jwtTokenHandler.CreateToken(tokenDescription));

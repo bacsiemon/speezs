@@ -10,6 +10,13 @@ namespace speezs.DataAccess
 {
 	public class UnitOfWork
 	{
+		private SpeezsDbContext _db;
+
+		public UnitOfWork(SpeezsDbContext db)
+		{
+			_db = db;
+		}
+
 		private CollectionLookRepository _collectionLookRepository;
 		private FavoriteCollectionRepository _favoriteCollectionRepository;
 		private LookProductRepository _lookProductRepository;
@@ -23,22 +30,17 @@ namespace speezs.DataAccess
 		private UserSubscriptionRepository _userSubscriptionRepository;
 		private UserResetPasswordCodeRepository _userResetPasswordCodeRepository;
 
-		public UnitOfWork()
-		{
-
-		}
-
-		public CollectionLookRepository CollectionLookRepository { get { return _collectionLookRepository ??= new(); } }
-		public FavoriteCollectionRepository FavoriteCollectionRepository { get { return _favoriteCollectionRepository ??= new(); } }
-		public LookProductRepository LookProductRepository { get { return _lookProductRepository ??= new(); } }	
-		public LookRepository LookRepository { get { return _lookRepository ??= new(); } }
-		public MakeupProductRepository MakeupProductRepository { get { return _makeupProductRepository ??= new(); } }
-		public ReviewRepository ReviewRepository { get { return _reviewRepository ??= new(); } }
-		public SubscriptionTierRepository SubscriptionTierRepository { get { return _subscriptionTierRepository ??= new(); } }
-		public TransferRepository TransferRepository { get { return _transferRepository ??= new(); } }
-		public UserPreferenceRepository UserPreferenceRepository { get { return _userPreferenceRepository ??= new(); } }
-		public UserRepository UserRepository { get { return _userRepository ??= new(); } }
-		public UserSubscriptionRepository UserSubscriptionRepository { get { return _userSubscriptionRepository ??= new(); } }
-		public UserResetPasswordCodeRepository UserResetPasswordCodeRepository { get { return _userResetPasswordCodeRepository ??= new(); } }
+		public CollectionLookRepository CollectionLookRepository { get { return _collectionLookRepository ??= new(_db); } }
+		public FavoriteCollectionRepository FavoriteCollectionRepository { get { return _favoriteCollectionRepository ??= new(_db); } }
+		public LookProductRepository LookProductRepository { get { return _lookProductRepository ??= new(_db); } }	
+		public LookRepository LookRepository { get { return _lookRepository ??= new(_db); } }
+		public MakeupProductRepository MakeupProductRepository { get { return _makeupProductRepository ??= new(_db); } }
+		public ReviewRepository ReviewRepository { get { return _reviewRepository ??= new(_db); } }
+		public SubscriptionTierRepository SubscriptionTierRepository { get { return _subscriptionTierRepository ??= new(_db); } }
+		public TransferRepository TransferRepository { get { return _transferRepository ??= new(_db); } }
+		public UserPreferenceRepository UserPreferenceRepository { get { return _userPreferenceRepository ??= new(_db); } }
+		public UserRepository UserRepository { get { return _userRepository ??= new(_db); } }
+		public UserSubscriptionRepository UserSubscriptionRepository { get { return _userSubscriptionRepository ??= new(_db); } }
+		public UserResetPasswordCodeRepository UserResetPasswordCodeRepository { get { return _userResetPasswordCodeRepository ??= new(_db); } }
 	}
 }

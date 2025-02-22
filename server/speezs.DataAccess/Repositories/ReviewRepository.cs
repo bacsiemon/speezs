@@ -10,6 +10,8 @@ namespace speezs.DataAccess.Repositories
 {
 	public class ReviewRepository : GenericRepository<Review>
 	{
-
+		public ReviewRepository(SpeezsDbContext context) : base(context)
+		{
+		}
 	}
 }
