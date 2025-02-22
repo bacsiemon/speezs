@@ -12,11 +12,6 @@ namespace speezs.DataAccess.Base
 	{
 		protected SpeezsDbContext _context;
 
-		public GenericRepository()
-		{
-
-		}
-
 		public GenericRepository(SpeezsDbContext context)
 		{
 			_context = context;

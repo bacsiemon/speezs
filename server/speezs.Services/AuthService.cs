@@ -19,14 +19,10 @@ namespace speezs.Services
 		private UnitOfWork _unitOfWork;
 		private JwtHelper _jwtHelper;
 
-		public AuthService(JwtHelper jwtHelper)
+		public AuthService(JwtHelper jwtHelper, UnitOfWork unitOfWork)
 		{
 			_jwtHelper = jwtHelper;
-		}
-
-		public AuthService()
-		{
-			if (null == _unitOfWork) _unitOfWork = new UnitOfWork();
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<IServiceResult> Login(LoginRequestModel request)
@@ -43,8 +39,7 @@ namespace speezs.Services
 				var accessToken = await _jwtHelper.GenerateAccessTokenAsync(user);
 				var refreshToken = await _jwtHelper.GenerateRefreshTokenAsync();
 				user.RefreshToken = refreshToken;
-				user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(30);
-
+				user.RefreshTokenExpiry = DateTime.Now.AddDays(30);
 
 				await _unitOfWork.UserRepository.UpdateAsync(user);
 				return new ServiceResult(200, "Thành Công", new LoginResponseModel()
@@ -55,7 +50,7 @@ namespace speezs.Services
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
 		}
@@ -68,10 +63,11 @@ namespace speezs.Services
 				var existingUser = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
 				if (existingUser != null) return new ServiceResult(400, "Email is already used");
 
-				string passwordSalt = GetPasswordSalt();
+				string passwordSalt = GetRandomString();
 				var user = new User()
 				{
 					Email = request.Email,
+					PhoneNumber = request.PhoneNumber,
 					FullName = request.FullName,
 					PasswordSalt = passwordSalt,
 					PasswordHash = HashPassword(request.Password, passwordSalt),
@@ -82,7 +78,7 @@ namespace speezs.Services
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString);
+				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
 		}
@@ -95,12 +91,17 @@ namespace speezs.Services
 				if (existingUser == null)
 					return new ServiceResult(200, "Success");
 
-				var code = Convert.ToBase64String(RandomNumberGenerator.GetBytes(128 / 8)).Substring(0, 6);
-				var entity = new UserResetPasswordCode()
+				var code = Convert.ToBase64String(RandomNumberGenerator.GetBytes(128 / 8)).Substring(0, 6).ToUpper();
+				Console.WriteLine(code);
+
+				var existingEntity = await _unitOfWork.UserResetPasswordCodeRepository.GetByEmailAsync(email);
+				if (existingEntity != null)
+					await _unitOfWork.UserResetPasswordCodeRepository.RemoveAsync(existingEntity);
+				var entity = new Userresetpasswordcode()
 				{
 					Email = existingUser.Email,
 					CodeHash = HashPassword(code, existingUser.PasswordSalt),
-					Expire = DateTime.UtcNow.AddDays(1)
+					Expire = DateTime.Now.AddDays(1)
 				};
 
 				await _unitOfWork.UserResetPasswordCodeRepository.CreateAsync(entity);
@@ -108,7 +109,7 @@ namespace speezs.Services
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString);
+				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
 		}
@@ -123,10 +124,10 @@ namespace speezs.Services
 				var existingUser = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
 				if (existingUser == null) return new ServiceResult(404, "Not Found");
 
-				if (code.CodeHash != HashPassword(request.Code, existingUser.PasswordSalt))
+				if (!code.CodeHash.Equals(HashPassword(request.Code, existingUser.PasswordSalt)))
 					if (code == null) return new ServiceResult(404, "Not Found");
 
-				existingUser.PasswordSalt = GetPasswordSalt();
+				existingUser.PasswordSalt = GetRandomString();
 				existingUser.PasswordHash = HashPassword(request.Password, existingUser.PasswordSalt);
 
 				await _unitOfWork.UserRepository.UpdateAsync(existingUser);
@@ -136,7 +137,7 @@ namespace speezs.Services
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.ToString);
+				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
 		}
@@ -154,9 +155,9 @@ namespace speezs.Services
 			return Convert.ToHexString(hash);
 		}
 
-		private string GetPasswordSalt()
+		private string GetRandomString()
 		{
-			return Convert.ToBase64String(RandomNumberGenerator.GetBytes(128 / 8)).Substring(0, 64);
+			return Convert.ToBase64String(RandomNumberGenerator.GetBytes(16));
 		}
 
 

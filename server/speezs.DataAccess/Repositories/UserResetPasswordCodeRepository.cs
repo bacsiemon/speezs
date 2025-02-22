@@ -9,11 +9,15 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class UserResetPasswordCodeRepository : GenericRepository<UserResetPasswordCode>
+	public class UserResetPasswordCodeRepository : GenericRepository<Userresetpasswordcode>
 	{
-		public async Task<UserResetPasswordCode?> GetByEmailAsync(string email)
+		public UserResetPasswordCodeRepository(SpeezsDbContext context) : base(context)
 		{
-			return await _context.UserResetPasswordCodes.FirstOrDefaultAsync(u => u.Email.Equals(email));
+		}
+
+		public async Task<Userresetpasswordcode?> GetByEmailAsync(string email)
+		{
+			return await _context.Userresetpasswordcodes.FirstOrDefaultAsync(u => u.Email.Equals(email));
 		}
 	}
 }

@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class UserPreferenceRepository : GenericRepository<UserPreference>
+	public class UserPreferenceRepository : GenericRepository<Userpreference>
 	{
-
+		public UserPreferenceRepository(SpeezsDbContext context) : base(context)
+		{
+		}
 	}
 }

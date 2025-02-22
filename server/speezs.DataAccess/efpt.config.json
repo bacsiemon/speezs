@@ -15,51 +15,51 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "[dbo].[CollectionLooks]",
+         "Name": "public.collectionlooks",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[FavoriteCollections]",
+         "Name": "public.favoritecollections",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[LookProducts]",
+         "Name": "public.lookproducts",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Looks]",
+         "Name": "public.looks",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[MakeupProducts]",
+         "Name": "public.makeupproducts",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Reviews]",
+         "Name": "public.reviews",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[SubscriptionTiers]",
+         "Name": "public.subscriptiontiers",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Transfers]",
+         "Name": "public.transfers",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[UserPreferences]",
+         "Name": "public.userpreferences",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[UserResetPasswordCodes]",
+         "Name": "public.userresetpasswordcodes",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Users]",
+         "Name": "public.users",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[UserSubscriptions]",
+         "Name": "public.usersubscriptions",
          "ObjectType": 0
       }
    ],

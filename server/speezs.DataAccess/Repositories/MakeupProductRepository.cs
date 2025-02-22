@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class MakeupProductRepository : GenericRepository<MakeupProduct>
+	public class MakeupProductRepository : GenericRepository<Makeupproduct>
 	{
-
+		public MakeupProductRepository(SpeezsDbContext context) : base(context)
+		{
+		}
 	}
 }

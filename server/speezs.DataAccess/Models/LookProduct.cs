@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class LookProduct
+public partial class Lookproduct
 {
     public int LookProductId { get; set; }
 
@@ -31,5 +31,5 @@ public partial class LookProduct
 
     public virtual Look Look { get; set; }
 
-    public virtual MakeupProduct Product { get; set; }
+    public virtual Makeupproduct Product { get; set; }
 }

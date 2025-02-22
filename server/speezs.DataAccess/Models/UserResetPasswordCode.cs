@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class UserResetPasswordCode
+public partial class Userresetpasswordcode
 {
     public string Email { get; set; }
 
