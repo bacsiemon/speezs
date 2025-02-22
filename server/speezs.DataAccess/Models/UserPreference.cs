@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class UserPreference
+public partial class Userpreference
 {
     public int PreferenceId { get; set; }
 

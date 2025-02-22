@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class FavoriteCollection
+public partial class Favoritecollection
 {
     public int CollectionId { get; set; }
 
@@ -25,7 +25,7 @@ public partial class FavoriteCollection
 
     public DateTime? DateDeleted { get; set; }
 
-    public virtual ICollection<CollectionLook> CollectionLooks { get; set; } = new List<CollectionLook>();
+    public virtual ICollection<Collectionlook> Collectionlooks { get; set; } = new List<Collectionlook>();
 
     public virtual User User { get; set; }
 }

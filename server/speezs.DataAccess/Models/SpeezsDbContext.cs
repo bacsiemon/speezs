@@ -13,68 +13,88 @@ public partial class SpeezsDbContext : DbContext
     {
     }
 
-    public virtual DbSet<CollectionLook> CollectionLooks { get; set; }
+    public virtual DbSet<Collectionlook> Collectionlooks { get; set; }
 
-    public virtual DbSet<FavoriteCollection> FavoriteCollections { get; set; }
+    public virtual DbSet<Favoritecollection> Favoritecollections { get; set; }
 
     public virtual DbSet<Look> Looks { get; set; }
 
-    public virtual DbSet<LookProduct> LookProducts { get; set; }
+    public virtual DbSet<Lookproduct> Lookproducts { get; set; }
 
-    public virtual DbSet<MakeupProduct> MakeupProducts { get; set; }
+    public virtual DbSet<Makeupproduct> Makeupproducts { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
 
-    public virtual DbSet<SubscriptionTier> SubscriptionTiers { get; set; }
+    public virtual DbSet<Subscriptiontier> Subscriptiontiers { get; set; }
 
     public virtual DbSet<Transfer> Transfers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<UserPreference> UserPreferences { get; set; }
+    public virtual DbSet<Userpreference> Userpreferences { get; set; }
 
-    public virtual DbSet<UserResetPasswordCode> UserResetPasswordCodes { get; set; }
+    public virtual DbSet<Userresetpasswordcode> Userresetpasswordcodes { get; set; }
 
-    public virtual DbSet<UserSubscription> UserSubscriptions { get; set; }
+    public virtual DbSet<Usersubscription> Usersubscriptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CollectionLook>(entity =>
+        modelBuilder.HasPostgresExtension("uuid-ossp");
+
+        modelBuilder.Entity<Collectionlook>(entity =>
         {
-            entity.HasKey(e => e.CollectionLookId).HasName("PK__Collecti__ED9B7B748C6AF668");
+            entity.HasKey(e => e.CollectionLookId).HasName("collectionlooks_pkey");
+
+            entity.ToTable("collectionlooks");
 
             entity.Property(e => e.CollectionLookId).HasColumnName("collection_look_id");
             entity.Property(e => e.CollectionId).HasColumnName("collection_id");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.LookId).HasColumnName("look_id");
             entity.Property(e => e.Notes).HasColumnName("notes");
 
-            entity.HasOne(d => d.Collection).WithMany(p => p.CollectionLooks)
+            entity.HasOne(d => d.Collection).WithMany(p => p.Collectionlooks)
                 .HasForeignKey(d => d.CollectionId)
-                .HasConstraintName("FK__Collectio__colle__75A278F5");
+                .HasConstraintName("collectionlooks_collection_id_fkey");
 
-            entity.HasOne(d => d.Look).WithMany(p => p.CollectionLooks)
+            entity.HasOne(d => d.Look).WithMany(p => p.Collectionlooks)
                 .HasForeignKey(d => d.LookId)
-                .HasConstraintName("FK__Collectio__look___76969D2E");
+                .HasConstraintName("collectionlooks_look_id_fkey");
         });
 
-        modelBuilder.Entity<FavoriteCollection>(entity =>
+        modelBuilder.Entity<Favoritecollection>(entity =>
         {
-            entity.HasKey(e => e.CollectionId).HasName("PK__Favorite__53D3A5CAE577CAB2");
+            entity.HasKey(e => e.CollectionId).HasName("favoritecollections_pkey");
+
+            entity.ToTable("favoritecollections");
 
             entity.Property(e => e.CollectionId).HasColumnName("collection_id");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.IsPrivate)
                 .HasDefaultValue(false)
                 .HasColumnName("is_private");
@@ -83,30 +103,39 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.User).WithMany(p => p.FavoriteCollections)
+            entity.HasOne(d => d.User).WithMany(p => p.Favoritecollections)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__FavoriteC__user___6FE99F9F");
+                .HasConstraintName("favoritecollections_user_id_fkey");
         });
 
         modelBuilder.Entity<Look>(entity =>
         {
-            entity.HasKey(e => e.LookId).HasName("PK__Looks__CE13522CE78C7B80");
+            entity.HasKey(e => e.LookId).HasName("looks_pkey");
+
+            entity.ToTable("looks");
 
             entity.Property(e => e.LookId).HasColumnName("look_id");
             entity.Property(e => e.AvgRating)
-                .HasColumnType("decimal(3, 2)")
+                .HasPrecision(3, 2)
                 .HasColumnName("avg_rating");
             entity.Property(e => e.Category)
                 .HasMaxLength(50)
                 .HasColumnName("category");
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.IsPublic)
                 .HasDefaultValue(true)
                 .HasColumnName("is_public");
@@ -123,12 +152,14 @@ public partial class SpeezsDbContext : DbContext
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Looks)
                 .HasForeignKey(d => d.CreatedBy)
-                .HasConstraintName("FK__Looks__created_b__3D5E1FD2");
+                .HasConstraintName("looks_created_by_fkey");
         });
 
-        modelBuilder.Entity<LookProduct>(entity =>
+        modelBuilder.Entity<Lookproduct>(entity =>
         {
-            entity.HasKey(e => e.LookProductId).HasName("PK__LookProd__8293FB24558B2F45");
+            entity.HasKey(e => e.LookProductId).HasName("lookproducts_pkey");
+
+            entity.ToTable("lookproducts");
 
             entity.Property(e => e.LookProductId).HasColumnName("look_product_id");
             entity.Property(e => e.ApplicationArea)
@@ -136,30 +167,39 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("application_area");
             entity.Property(e => e.ApplicationOrder).HasColumnName("application_order");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.Intensity)
-                .HasColumnType("decimal(3, 2)")
+                .HasPrecision(3, 2)
                 .HasColumnName("intensity");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.LookId).HasColumnName("look_id");
             entity.Property(e => e.Notes).HasColumnName("notes");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-            entity.HasOne(d => d.Look).WithMany(p => p.LookProducts)
+            entity.HasOne(d => d.Look).WithMany(p => p.Lookproducts)
                 .HasForeignKey(d => d.LookId)
-                .HasConstraintName("FK__LookProdu__look___48CFD27E");
+                .HasConstraintName("lookproducts_look_id_fkey");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.LookProducts)
+            entity.HasOne(d => d.Product).WithMany(p => p.Lookproducts)
                 .HasForeignKey(d => d.ProductId)
-                .HasConstraintName("FK__LookProdu__produ__49C3F6B7");
+                .HasConstraintName("lookproducts_product_id_fkey");
         });
 
-        modelBuilder.Entity<MakeupProduct>(entity =>
+        modelBuilder.Entity<Makeupproduct>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__MakeupPr__47027DF5161B9EC4");
+            entity.HasKey(e => e.ProductId).HasName("makeupproducts_pkey");
+
+            entity.ToTable("makeupproducts");
 
             entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.Brand)
@@ -172,15 +212,22 @@ public partial class SpeezsDbContext : DbContext
                 .HasMaxLength(7)
                 .HasColumnName("color_code");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.ImageUrl)
                 .HasMaxLength(255)
                 .HasColumnName("image_url");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.IsVerified)
                 .HasDefaultValue(false)
                 .HasColumnName("is_verified");
@@ -192,51 +239,69 @@ public partial class SpeezsDbContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D903AACA979");
+            entity.HasKey(e => e.ReviewId).HasName("reviews_pkey");
+
+            entity.ToTable("reviews");
 
             entity.Property(e => e.ReviewId).HasColumnName("review_id");
             entity.Property(e => e.Comment).HasColumnName("comment");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.HelpfulVotes)
                 .HasDefaultValue(0)
                 .HasColumnName("helpful_votes");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.LookId).HasColumnName("look_id");
             entity.Property(e => e.Rating).HasColumnName("rating");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.Look).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.LookId)
-                .HasConstraintName("FK__Reviews__look_id__5441852A");
+                .HasConstraintName("reviews_look_id_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Reviews__user_id__5535A963");
+                .HasConstraintName("reviews_user_id_fkey");
         });
 
-        modelBuilder.Entity<SubscriptionTier>(entity =>
+        modelBuilder.Entity<Subscriptiontier>(entity =>
         {
-            entity.HasKey(e => e.TierId).HasName("PK__Subscrip__9D52AF9C8EB17BBC");
+            entity.HasKey(e => e.TierId).HasName("subscriptiontiers_pkey");
+
+            entity.ToTable("subscriptiontiers");
 
             entity.Property(e => e.TierId).HasColumnName("tier_id");
             entity.Property(e => e.AllowsCommercialUse)
                 .HasDefaultValue(false)
                 .HasColumnName("allows_commercial_use");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.DurationDays).HasColumnName("duration_days");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.MaxCollections).HasColumnName("max_collections");
             entity.Property(e => e.MaxTransfers).HasColumnName("max_transfers");
             entity.Property(e => e.Name)
@@ -244,7 +309,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("name");
             entity.Property(e => e.Price)
-                .HasColumnType("decimal(10, 2)")
+                .HasPrecision(10, 2)
                 .HasColumnName("price");
             entity.Property(e => e.PriorityProcessing)
                 .HasDefaultValue(false)
@@ -253,21 +318,30 @@ public partial class SpeezsDbContext : DbContext
 
         modelBuilder.Entity<Transfer>(entity =>
         {
-            entity.HasKey(e => e.TransferId).HasName("PK__Transfer__78E6FD3366FF8C64");
+            entity.HasKey(e => e.TransferId).HasName("transfers_pkey");
+
+            entity.ToTable("transfers");
 
             entity.Property(e => e.TransferId).HasColumnName("transfer_id");
             entity.Property(e => e.AiModelVersion)
                 .HasMaxLength(50)
                 .HasColumnName("ai_model_version");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.LookId).HasColumnName("look_id");
             entity.Property(e => e.ProcessingTime)
-                .HasColumnType("decimal(5, 2)")
+                .HasPrecision(5, 2)
                 .HasColumnName("processing_time");
             entity.Property(e => e.ResultImageUrl)
                 .HasMaxLength(255)
@@ -282,25 +356,32 @@ public partial class SpeezsDbContext : DbContext
 
             entity.HasOne(d => d.Look).WithMany(p => p.Transfers)
                 .HasForeignKey(d => d.LookId)
-                .HasConstraintName("FK__Transfers__look___4F7CD00D");
+                .HasConstraintName("transfers_look_id_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Transfers)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Transfers__user___4E88ABD4");
+                .HasConstraintName("transfers_user_id_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370F2B3DD91D");
+            entity.HasKey(e => e.UserId).HasName("users_pkey");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E6164317B8B1C").IsUnique();
+            entity.ToTable("users");
+
+            entity.HasIndex(e => e.Email, "users_email_key").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.Email)
                 .IsRequired()
                 .HasMaxLength(128)
@@ -308,9 +389,11 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.FullName)
                 .HasMaxLength(100)
                 .HasColumnName("full_name");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.LastLogin)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("last_login");
             entity.Property(e => e.PasswordHash)
                 .IsRequired()
@@ -326,15 +409,21 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.ProfileImageUrl)
                 .HasMaxLength(255)
                 .HasColumnName("profile_image_url");
-            entity.Property(e => e.RefreshToken).HasMaxLength(64);
-            entity.Property(e => e.RefreshTokenExpiry).HasColumnType("datetime");
+            entity.Property(e => e.RefreshToken)
+                .HasMaxLength(64)
+                .HasColumnName("refresh_token");
+            entity.Property(e => e.RefreshTokenExpiry)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("refresh_token_expiry");
         });
 
-        modelBuilder.Entity<UserPreference>(entity =>
+        modelBuilder.Entity<Userpreference>(entity =>
         {
-            entity.HasKey(e => e.PreferenceId).HasName("PK__UserPref__FB41DBCF538B1106");
+            entity.HasKey(e => e.PreferenceId).HasName("userpreferences_pkey");
 
-            entity.HasIndex(e => e.UserId, "UQ__UserPref__B9BE370E47803A8C").IsUnique();
+            entity.ToTable("userpreferences");
+
+            entity.HasIndex(e => e.UserId, "userpreferences_user_id_key").IsUnique();
 
             entity.Property(e => e.PreferenceId).HasColumnName("preference_id");
             entity.Property(e => e.AiEnhancementLevel)
@@ -342,17 +431,24 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("ai_enhancement_level");
             entity.Property(e => e.Allergies).HasColumnName("allergies");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.EyeColor)
                 .HasMaxLength(50)
                 .HasColumnName("eye_color");
             entity.Property(e => e.FaceShape)
                 .HasMaxLength(50)
                 .HasColumnName("face_shape");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.PreferredBrands).HasColumnName("preferred_brands");
             entity.Property(e => e.SkinTone)
                 .HasMaxLength(50)
@@ -362,14 +458,16 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("skin_type");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.User).WithOne(p => p.UserPreference)
-                .HasForeignKey<UserPreference>(d => d.UserId)
-                .HasConstraintName("FK__UserPrefe__user___5CD6CB2B");
+            entity.HasOne(d => d.User).WithOne(p => p.Userpreference)
+                .HasForeignKey<Userpreference>(d => d.UserId)
+                .HasConstraintName("userpreferences_user_id_fkey");
         });
 
-        modelBuilder.Entity<UserResetPasswordCode>(entity =>
+        modelBuilder.Entity<Userresetpasswordcode>(entity =>
         {
-            entity.HasKey(e => e.Email);
+            entity.HasKey(e => e.Email).HasName("userresetpasswordcodes_pkey");
+
+            entity.ToTable("userresetpasswordcodes");
 
             entity.Property(e => e.Email)
                 .HasMaxLength(128)
@@ -379,41 +477,50 @@ public partial class SpeezsDbContext : DbContext
                 .HasMaxLength(64)
                 .HasColumnName("code_hash");
             entity.Property(e => e.Expire)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("expire");
         });
 
-        modelBuilder.Entity<UserSubscription>(entity =>
+        modelBuilder.Entity<Usersubscription>(entity =>
         {
-            entity.HasKey(e => e.UserSubscriptionId).HasName("PK__UserSubs__14DBAAD975730EDA");
+            entity.HasKey(e => e.UserSubscriptionId).HasName("usersubscriptions_pkey");
+
+            entity.ToTable("usersubscriptions");
 
             entity.Property(e => e.UserSubscriptionId).HasColumnName("user_subscription_id");
             entity.Property(e => e.AutoRenew)
                 .HasDefaultValue(true)
                 .HasColumnName("auto_renew");
             entity.Property(e => e.CancellationDate)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("cancellation_date");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.DateDeleted).HasColumnType("datetime");
-            entity.Property(e => e.DateModified).HasColumnType("datetime");
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_created");
+            entity.Property(e => e.DateDeleted)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_deleted");
+            entity.Property(e => e.DateModified)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("date_modified");
             entity.Property(e => e.EndDate)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("end_date");
-            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
             entity.Property(e => e.LastBillingDate)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("last_billing_date");
             entity.Property(e => e.NextBillingDate)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("next_billing_date");
             entity.Property(e => e.PaymentMethod)
                 .HasMaxLength(50)
                 .HasColumnName("payment_method");
             entity.Property(e => e.StartDate)
-                .HasColumnType("datetime")
+                .HasColumnType("timestamp without time zone")
                 .HasColumnName("start_date");
             entity.Property(e => e.Status)
                 .IsRequired()
@@ -422,13 +529,13 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.TierId).HasColumnName("tier_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.Tier).WithMany(p => p.UserSubscriptions)
+            entity.HasOne(d => d.Tier).WithMany(p => p.Usersubscriptions)
                 .HasForeignKey(d => d.TierId)
-                .HasConstraintName("FK__UserSubsc__tier___6A30C649");
+                .HasConstraintName("usersubscriptions_tier_id_fkey");
 
-            entity.HasOne(d => d.User).WithMany(p => p.UserSubscriptions)
+            entity.HasOne(d => d.User).WithMany(p => p.Usersubscriptions)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__UserSubsc__user___693CA210");
+                .HasConstraintName("usersubscriptions_user_id_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

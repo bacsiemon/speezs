@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class SubscriptionTier
+public partial class Subscriptiontier
 {
     public int TierId { get; set; }
 
@@ -35,5 +35,5 @@ public partial class SubscriptionTier
 
     public DateTime? DateDeleted { get; set; }
 
-    public virtual ICollection<UserSubscription> UserSubscriptions { get; set; } = new List<UserSubscription>();
+    public virtual ICollection<Usersubscription> Usersubscriptions { get; set; } = new List<Usersubscription>();
 }
