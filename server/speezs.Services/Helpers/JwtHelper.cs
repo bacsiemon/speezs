@@ -29,9 +29,9 @@ namespace speezs.Services.Helpers
 			{
 				Subject = new ClaimsIdentity(new[]
 				{
-					new Claim("UserId", user.UserId.ToString()),
-					new Claim(ClaimTypes.Name, user.FullName),
-					new Claim(ClaimTypes.Email, user.Email),
+					new System.Security.Claims.Claim("UserId", user.UserId.ToString()),
+					new System.Security.Claims.Claim(ClaimTypes.Name, user.FullName),
+					new System.Security.Claims.Claim(ClaimTypes.Email, user.Email),
 				}),
 				Expires = DateTime.Now.AddMinutes(120),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha256Signature)

@@ -41,7 +41,6 @@ namespace speezs.DataAccess.Base
 		public void Create(T entity)
 		{
 			_context.Add(entity);
-			_context.SaveChanges();
 		}
 
 		public async Task<int> CreateAsync(T entity)
@@ -54,7 +53,6 @@ namespace speezs.DataAccess.Base
 		{
 			var tracker = _context.Attach(entity);
 			tracker.State = EntityState.Modified;
-			_context.SaveChanges();
 		}
 
 		public async Task<int> UpdateAsync(T entity)
@@ -68,7 +66,6 @@ namespace speezs.DataAccess.Base
 		public bool Remove(T entity)
 		{
 			_context.Remove(entity);
-			_context.SaveChanges();
 			return true;
 		}
 

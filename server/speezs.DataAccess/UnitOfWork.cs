@@ -42,5 +42,15 @@ namespace speezs.DataAccess
 		public UserRepository UserRepository { get { return _userRepository ??= new(_db); } }
 		public UserSubscriptionRepository UserSubscriptionRepository { get { return _userSubscriptionRepository ??= new(_db); } }
 		public UserResetPasswordCodeRepository UserResetPasswordCodeRepository { get { return _userResetPasswordCodeRepository ??= new(_db); } }
+
+		public async Task<int> SaveChangesAsync()
+		{
+			return await _db.SaveChangesAsync();
+		}
+
+		public void Abort()
+		{
+			_db.ChangeTracker.Clear();
+		}
 	}
 }
