@@ -1,50 +1,32 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using speezs.Services;
 using speezs.Services.Interfaces;
-using speezs.Services.Models.Auth;
+using speezs.Services.Models.User;
 
 namespace speezs.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class AuthController : ControllerBase
+	public class UserController : ControllerBase
 	{
-		private readonly IAuthService _authService;
+		private IUserService _userService;
 
-		public AuthController(IAuthService authService)
+		public UserController(IUserService userService)
 		{
-			_authService = authService;
+			_userService = userService;
 		}
 
-		[HttpPost("login")]
-		public async Task<IActionResult> Login(LoginRequestModel request)
-		{
+		[HttpGet]
+		public async Task<IActionResult> Get()
+		{		
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
-
-				var response = await _authService.Login(request);
+				var response = await _userService.GetAllAsync();
 				return StatusCode(response.Status, response.Data ?? response.Message);
-			}
-			catch (Exception ex) 
-			{
-				Console.WriteLine(ex.ToString());
-				return StatusCode(500, ex.Message);
-			}
-			
-		}
 
-		[HttpPost("Register")]
-		public async Task<IActionResult> Register(RegisterRequest request)
-		{
-			try
-			{
-				if (!ModelState.IsValid)
-					return BadRequest(ModelState);
-
-				var response = await _authService.Register(request);
-				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
 			{
@@ -54,15 +36,15 @@ namespace speezs.API.Controllers
 		}
 
 
-		[HttpPost("ForgotPassword")]
-		public async Task<IActionResult> ForgotPassword(string email)
+		[HttpGet("{id}")]
+		public async Task<IActionResult> Get(int id)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _authService.ForgotPassword(email);
+				var response = await _userService.GetByIdAsync(id);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -72,15 +54,15 @@ namespace speezs.API.Controllers
 			}
 		}
 
-		[HttpPost("ResetPassword")]
-		public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+		[HttpPost]
+		public async Task<IActionResult> Create(CreateUserRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _authService.ResetPassword(request);
+				var response = await _userService.CreateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -90,5 +72,40 @@ namespace speezs.API.Controllers
 			}
 		}
 
+		[HttpPut]
+		public async Task<IActionResult> Update(UpdateUserRequest request)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+					return BadRequest(ModelState);
+
+				var response = await _userService.UpdateAsync(request);
+				return StatusCode(response.Status, response.Data ?? response.Message);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return StatusCode(500, ex.Message);
+			}
+		}
+
+		[HttpDelete]
+		public async Task<IActionResult> Delete(int id)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+					return BadRequest(ModelState);
+
+				var response = await _userService.DeleteAsync(id);
+				return StatusCode(response.Status, response.Data ?? response.Message);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return StatusCode(500, ex.Message);
+			}
+		}
 	}
 }

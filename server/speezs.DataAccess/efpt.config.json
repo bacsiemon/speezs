@@ -47,6 +47,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "public.userclaims",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.userpreferences",
          "ObjectType": 0
       },

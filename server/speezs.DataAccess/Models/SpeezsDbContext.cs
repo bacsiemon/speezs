@@ -31,6 +31,8 @@ public partial class SpeezsDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<Userclaim> Userclaims { get; set; }
+
     public virtual DbSet<Userpreference> Userpreferences { get; set; }
 
     public virtual DbSet<Userresetpasswordcode> Userresetpasswordcodes { get; set; }
@@ -397,7 +399,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("last_login");
             entity.Property(e => e.PasswordHash)
                 .IsRequired()
-                .HasMaxLength(64)
+                .HasMaxLength(256)
                 .HasColumnName("password_hash");
             entity.Property(e => e.PasswordSalt)
                 .IsRequired()
@@ -415,6 +417,33 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.RefreshTokenExpiry)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("refresh_token_expiry");
+        });
+
+        modelBuilder.Entity<Userclaim>(entity =>
+        {
+            entity.HasKey(e => e.ClaimId).HasName("userclaims_pk");
+
+            entity.ToTable("userclaims");
+
+            entity.Property(e => e.ClaimId)
+                .ValueGeneratedNever()
+                .HasColumnName("claim_id");
+            entity.Property(e => e.ClaimType)
+                .IsRequired()
+                .HasMaxLength(64)
+                .HasDefaultValueSql("'UNKNOWN'::character varying")
+                .HasColumnName("claim_type");
+            entity.Property(e => e.ClaimValue)
+                .IsRequired()
+                .HasMaxLength(64)
+                .HasDefaultValueSql("'UNKNOWN'::character varying")
+                .HasColumnName("claim_value");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Userclaims)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("user_id");
         });
 
         modelBuilder.Entity<Userpreference>(entity =>
@@ -474,7 +503,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("email");
             entity.Property(e => e.CodeHash)
                 .IsRequired()
-                .HasMaxLength(64)
+                .HasMaxLength(256)
                 .HasColumnName("code_hash");
             entity.Property(e => e.Expire)
                 .HasColumnType("timestamp without time zone")
