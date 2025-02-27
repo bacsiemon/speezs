@@ -152,10 +152,5 @@ namespace speezs.Services
 				return new ServiceResult(500, ex.Message);
 			}
 		}
-
-
-		
-
-
 	}
 }

@@ -10,5 +10,6 @@ namespace speezs.Services.Interfaces
 		Task<IServiceResult> CreateAsync(CreateUserRequest request);
 		Task<IServiceResult> UpdateAsync(UpdateUserRequest request);
 		Task<IServiceResult> DeleteAsync(int id);
+		Task<IServiceResult> GetPaginateAsync(int page, int size);
 	}
 }

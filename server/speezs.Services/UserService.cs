@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using speezs.DataAccess;
 using speezs.DataAccess.Models;
+using speezs.DataAccess.Paging;
 using speezs.Services.Base;
 using speezs.Services.Helpers;
 using speezs.Services.Interfaces;
@@ -22,7 +24,7 @@ namespace speezs.Services
 
 		public UserService(UnitOfWork unitOfWork, IMapper mapper, PasswordHelper passwordHelper)
 		{
-			this._unitOfWork = unitOfWork;
+			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 			_passwordHelper = passwordHelper;
 		}
@@ -30,12 +32,29 @@ namespace speezs.Services
 
 		public async Task<IServiceResult> GetAllAsync()
 		{
-			return new ServiceResult(200, "Success", await _unitOfWork.UserRepository.GetAllAsync());
+			try
+			{
+				return new ServiceResult(200, "Success", await _unitOfWork.UserRepository.GetAllAsync());
+			}
+			catch (Exception ex)
+			{
+				return new ServiceResult(500, ex.Message);
+			}		
 		}
 
 		public async Task<IServiceResult> GetByIdAsync(int id)
 		{
-			return new ServiceResult(200, "Success", await _unitOfWork.UserRepository.GetByIdAsync(id));
+			try
+			{
+				var result = await _unitOfWork.UserRepository.GetByIdAsync(id);
+				if (result == null)
+					return new ServiceResult(404, "Not Found");
+				return new ServiceResult(200, "Success", result);
+			}
+			catch (Exception ex)
+			{
+				return new ServiceResult(500, ex.Message);
+			}
 		}
 
 		public async Task<IServiceResult> CreateAsync(CreateUserRequest request)
@@ -113,16 +132,28 @@ namespace speezs.Services
 		{
 			try
 			{ 
-			var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
-			if (user == null)
-				return new ServiceResult(404, "User not found");
+				var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+				if (user == null)
+					return new ServiceResult(404, "User not found");
+				
+				_unitOfWork.UserRepository.Remove(user);
+				await _unitOfWork.SaveChangesAsync();
+				return new ServiceResult(204, "Success");
+			}
+			catch (Exception ex)
+			{
+				_unitOfWork.Abort();
+				Console.WriteLine(ex.ToString());
+				return new ServiceResult(500, ex.Message);
+			}
+		}
 
-			user.DateDeleted = DateTime.Now;
-			user.IsDeleted = true;
-
-			_unitOfWork.UserRepository.Update(user);
-			await _unitOfWork.SaveChangesAsync();
-				return new ServiceResult(200, "Success");
+		public async Task<IServiceResult> GetPaginateAsync(int page, int size)
+		{
+			try
+			{
+				IPaginate<User> result = await _unitOfWork.UserRepository.GetPagingListAsync(page : page,size:size);
+				return new ServiceResult(200, "Success", result);
 			}
 			catch (Exception ex)
 			{

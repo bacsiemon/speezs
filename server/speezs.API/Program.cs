@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 DependencyInjectionConfiguration.Configure(builder);
 JwtConfiguration.Configure(builder);
+JsonConfiguration.Configure(builder);
 
 var app = builder.Build();
 

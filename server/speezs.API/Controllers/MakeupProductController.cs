@@ -2,29 +2,30 @@
 using Microsoft.AspNetCore.Mvc;
 using speezs.Services;
 using speezs.Services.Interfaces;
+using speezs.Services.Models.MakeupProduct;
 using speezs.Services.Models.User;
 
 namespace speezs.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class UserController : ControllerBase
+	public class MakeupProductController : ControllerBase
 	{
-		private IUserService _userService;
+		private IMakeupProductService _makeupProductService;
 
-		public UserController(IUserService userService)
+		public MakeupProductController(IMakeupProductService makeupProductService)
 		{
-			_userService = userService;
+			_makeupProductService = makeupProductService;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> Get()
-		{		
+		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
-				var response = await _userService.GetAllAsync();
+				var response = await _makeupProductService.GetAllAsync();
 				return StatusCode(response.Status, response.Data ?? response.Message);
 
 			}
@@ -43,7 +44,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _userService.GetByIdAsync(id);
+				var response = await _makeupProductService.GetByIdAsync(id);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -61,7 +62,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _userService.GetPaginateAsync(page, size);
+				var response = await _makeupProductService.GetPaginateAsync(page, size);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -72,14 +73,14 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create(CreateUserRequest request)
+		public async Task<IActionResult> Create(CreateMakeupProductRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _userService.CreateAsync(request);
+				var response = await _makeupProductService.CreateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -90,14 +91,14 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(UpdateUserRequest request)
+		public async Task<IActionResult> Update(UpdateMakeupProductRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _userService.UpdateAsync(request);
+				var response = await _makeupProductService.UpdateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -115,7 +116,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _userService.DeleteAsync(id);
+				var response = await _makeupProductService.DeleteAsync(id);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -124,5 +125,6 @@ namespace speezs.API.Controllers
 				return StatusCode(500, ex.Message);
 			}
 		}
+
 	}
 }

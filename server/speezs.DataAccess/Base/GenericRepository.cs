@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using speezs.DataAccess.Models;
+using speezs.DataAccess.Paging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -119,6 +122,37 @@ namespace speezs.DataAccess.Base
 		public async Task<T> GetByIdAsync(Guid code)
 		{
 			return await _context.Set<T>().FindAsync(code);
+		}
+
+		public Task<IPaginate<T>> GetPagingListAsync(
+			Expression<Func<T, bool>> predicate = null,
+			Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+			Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+			int page = 1,
+			int size = 10
+		)
+		{
+			IQueryable<T> query = _context.Set<T>();
+			if (include != null) query = include(query);
+			if (predicate != null) query = query.Where(predicate);
+			if (orderBy != null) return orderBy(query).ToPaginateAsync(page, size, 1);
+			return query.AsNoTracking().ToPaginateAsync(page, size, 1);
+		}
+
+		public Task<IPaginate<TResult>> GetPagingListAsync<TResult>(
+			Expression<Func<T, TResult>> selector,
+			Expression<Func<T, bool>> predicate = null,
+			Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+			Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+			int page = 1,
+			int size = 10
+		)
+		{
+			IQueryable<T> query = _context.Set<T>();
+			if (include != null) query = include(query);
+			if (predicate != null) query = query.Where(predicate);
+			if (orderBy != null) return orderBy(query).Select(selector).ToPaginateAsync(page, size, 1);
+			return query.AsNoTracking().Select(selector).ToPaginateAsync(page, size, 1);
 		}
 
 	}
