@@ -116,7 +116,8 @@ namespace speezs.API.Controllers
 					return BadRequest(ModelState);
 
 				var response = await _userService.DeleteAsync(id);
-				return StatusCode(response.Status, response.Data ?? response.Message);
+				return (response.Status >= 200 && response.Status <= 299) ?
+					NoContent() : StatusCode(response.Status, response.Message);
 			}
 			catch (Exception ex)
 			{

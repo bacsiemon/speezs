@@ -29,6 +29,8 @@ namespace speezs.API.Configurations
 			builder.Services.AddScoped<IUserService, UserService>();
 			builder.Services.AddScoped<IMakeupProductService, MakeupProductService>();
 			builder.Services.AddScoped<ILookService, LookService>();
+			builder.Services.AddScoped<ITransferService, TransferService>();
+			builder.Services.AddScoped<ISubscriptionTierService, SubscriptionTierService>();
 		}
 
 		public static void ConfigureServices(WebApplicationBuilder builder)
