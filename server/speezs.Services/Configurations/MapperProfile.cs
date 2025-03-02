@@ -2,6 +2,8 @@
 using speezs.DataAccess.Models;
 using speezs.Services.Models.Look;
 using speezs.Services.Models.MakeupProduct;
+using speezs.Services.Models.SubscriptionTier;
+using speezs.Services.Models.Transfer;
 using speezs.Services.Models.User;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,8 @@ namespace speezs.Services.Configurations
 			ConfigureUser();
 			ConfigureMakeupProduct();	
 			ConfigureLook();
+			ConfigureTransfer();
+			ConfigureSubscriptionTier();
 		}
 
 		public void ConfigureUser()
@@ -59,6 +63,32 @@ namespace speezs.Services.Configurations
 			.ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
 			.ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => src.ThumbnailUrl))
 			.ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null)); // Only map if source member is not null
+		}
+
+		public void ConfigureTransfer()
+		{
+			CreateMap<CreateTransferRequest, Transfer>();
+		}
+
+		public void ConfigureSubscriptionTier()
+		{
+			CreateMap<CreateSubscriptionTierRequest, Subscriptiontier>();
+			CreateMap<UpdateSubscriptionTierRequest, Subscriptiontier>()
+			.ForMember(dest => dest.TierId, opt => opt.Ignore()) // TierId should not be updated from request
+			.ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name != null))
+			.ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null))
+			.ForMember(dest => dest.Price, opt => opt.Condition(src => src.Price != null))
+			.ForMember(dest => dest.DurationDays, opt => opt.Condition(src => src.DurationDays != null))
+			.ForMember(dest => dest.MaxTransfers, opt => opt.Condition(src => src.MaxTransfers != null))
+			.ForMember(dest => dest.MaxCollections, opt => opt.Condition(src => src.MaxCollections != null))
+			.ForMember(dest => dest.AllowsCommercialUse, opt => opt.Condition(src => src.AllowsCommercialUse != null))
+			.ForMember(dest => dest.PriorityProcessing, opt => opt.Condition(src => src.PriorityProcessing != null))
+			.ForMember(dest => dest.IsActive, opt => opt.Condition(src => src.IsActive != null))
+			.ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
+			.ForMember(dest => dest.DateCreated, opt => opt.Ignore())
+			.ForMember(dest => dest.DateModified, opt => opt.Ignore())
+			.ForMember(dest => dest.DateDeleted, opt => opt.Ignore())
+			.ForMember(dest => dest.Usersubscriptions, opt => opt.Ignore());
 		}
 	}
 }

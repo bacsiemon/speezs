@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -29,6 +30,15 @@ namespace speezs.Services.Helpers
 		public string GetSalt()
 		{
 			return Convert.ToBase64String(RandomNumberGenerator.GetBytes(16));
+		}
+
+		public void CreateResetPasswordCode(int userId)
+		{
+			ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
+			IDatabase db = redis.GetDatabase();
+
+			db.StringSet("foo", "bar");
+			Console.WriteLine(db.StringGet("foo"));
 		}
 	}
 }

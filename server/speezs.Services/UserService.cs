@@ -57,6 +57,21 @@ namespace speezs.Services
 			}
 		}
 
+		public async Task<IServiceResult> GetPaginateAsync(int page, int size)
+		{
+			try
+			{
+				IPaginate<User> result = await _unitOfWork.UserRepository.GetPagingListAsync(page: page, size: size);
+				return new ServiceResult(200, "Success", result);
+			}
+			catch (Exception ex)
+			{
+				_unitOfWork.Abort();
+				Console.WriteLine(ex.ToString());
+				return new ServiceResult(500, ex.Message);
+			}
+		}
+
 		public async Task<IServiceResult> CreateAsync(CreateUserRequest request)
 		{
 			try
@@ -148,19 +163,6 @@ namespace speezs.Services
 			}
 		}
 
-		public async Task<IServiceResult> GetPaginateAsync(int page, int size)
-		{
-			try
-			{
-				IPaginate<User> result = await _unitOfWork.UserRepository.GetPagingListAsync(page : page,size:size);
-				return new ServiceResult(200, "Success", result);
-			}
-			catch (Exception ex)
-			{
-				_unitOfWork.Abort();
-				Console.WriteLine(ex.ToString());
-				return new ServiceResult(500, ex.Message);
-			}
-		}
+		
 	}
 }

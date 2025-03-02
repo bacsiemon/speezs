@@ -2,20 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using speezs.Services;
 using speezs.Services.Interfaces;
-using speezs.Services.Models.MakeupProduct;
-using speezs.Services.Models.User;
+using speezs.Services.Models.Look;
+using speezs.Services.Models.Transfer;
 
 namespace speezs.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class MakeupProductController : ControllerBase
+	public class TransferController : ControllerBase
 	{
-		private IMakeupProductService _makeupProductService;
+		private ITransferService _transferService;
 
-		public MakeupProductController(IMakeupProductService makeupProductService)
+		public TransferController(ITransferService transferService)
 		{
-			_makeupProductService = makeupProductService;
+			_transferService = transferService;
 		}
 
 		[HttpGet]
@@ -25,7 +25,7 @@ namespace speezs.API.Controllers
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
-				var response = await _makeupProductService.GetAllAsync();
+				var response = await _transferService.GetAllAsync();
 				return StatusCode(response.Status, response.Data ?? response.Message);
 
 			}
@@ -44,7 +44,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _makeupProductService.GetByIdAsync(id);
+				var response = await _transferService.GetByIdAsync(id);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -62,7 +62,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _makeupProductService.GetPaginateAsync(page, size);
+				var response = await _transferService.GetPaginateAsync(page, size);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -73,14 +73,14 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create(CreateMakeupProductRequest request)
+		public async Task<IActionResult> Create(CreateTransferRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _makeupProductService.CreateAsync(request);
+				var response = await _transferService.CreateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -90,23 +90,23 @@ namespace speezs.API.Controllers
 			}
 		}
 
-		[HttpPut]
-		public async Task<IActionResult> Update(UpdateMakeupProductRequest request)
-		{
-			try
-			{
-				if (!ModelState.IsValid)
-					return BadRequest(ModelState);
+		//[HttpPut]
+		//public async Task<IActionResult> Update(UpdateLookRequest request)
+		//{
+		//	try
+		//	{
+		//		if (!ModelState.IsValid)
+		//			return BadRequest(ModelState);
 
-				var response = await _makeupProductService.UpdateAsync(request);
-				return StatusCode(response.Status, response.Data ?? response.Message);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-				return StatusCode(500, ex.Message);
-			}
-		}
+		//		var response = await _transferService.UpdateAsync(request);
+		//		return StatusCode(response.Status, response.Data ?? response.Message);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Console.WriteLine(ex.ToString());
+		//		return StatusCode(500, ex.Message);
+		//	}
+		//}
 
 		[HttpDelete]
 		public async Task<IActionResult> Delete(int id)
@@ -116,7 +116,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _makeupProductService.DeleteAsync(id);
+				var response = await _transferService.DeleteAsync(id);
 				return (response.Status >= 200 && response.Status <= 299) ?
 					NoContent() : StatusCode(response.Status, response.Message);
 			}
@@ -126,6 +126,5 @@ namespace speezs.API.Controllers
 				return StatusCode(500, ex.Message);
 			}
 		}
-
 	}
 }
