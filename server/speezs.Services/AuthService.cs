@@ -18,11 +18,12 @@ namespace speezs.Services
 	{
 		private UnitOfWork _unitOfWork;
 		private JwtHelper _jwtHelper;
-
-		public AuthService(JwtHelper jwtHelper, UnitOfWork unitOfWork)
+		private PasswordHelper _passwordHelper;
+		public AuthService(JwtHelper jwtHelper, UnitOfWork unitOfWork, PasswordHelper passwordHelper)
 		{
 			_jwtHelper = jwtHelper;
 			_unitOfWork = unitOfWork;
+			_passwordHelper = passwordHelper;
 		}
 
 		public async Task<IServiceResult> Login(LoginRequestModel request)
@@ -33,15 +34,17 @@ namespace speezs.Services
 				if (user == null)
 					return new ServiceResult(404, "Username not found");
 
-				if (user.PasswordHash != HashPassword(request.Password, user.PasswordSalt))
+				if (user.PasswordHash != _passwordHelper.HashPassword(request.Password, user.PasswordSalt))
 					return new ServiceResult(401, "Incorrect Password");
 
 				var accessToken = await _jwtHelper.GenerateAccessTokenAsync(user);
 				var refreshToken = await _jwtHelper.GenerateRefreshTokenAsync();
 				user.RefreshToken = refreshToken;
 				user.RefreshTokenExpiry = DateTime.Now.AddDays(30);
+				user.DateModified = DateTime.Now;
 
-				await _unitOfWork.UserRepository.UpdateAsync(user);
+				_unitOfWork.UserRepository.Update(user);
+				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Thành Công", new LoginResponseModel()
 				{
 					AccessToken = accessToken,
@@ -50,6 +53,7 @@ namespace speezs.Services
 			}
 			catch (Exception ex)
 			{
+				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
@@ -57,27 +61,30 @@ namespace speezs.Services
 
 		public async Task<IServiceResult> Register(RegisterRequest request)
 		{
-
 			try
 			{
 				var existingUser = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
 				if (existingUser != null) return new ServiceResult(400, "Email is already used");
 
-				string passwordSalt = GetRandomString();
+				string passwordSalt = _passwordHelper.GetSalt();
 				var user = new User()
 				{
 					Email = request.Email,
 					PhoneNumber = request.PhoneNumber,
 					FullName = request.FullName,
 					PasswordSalt = passwordSalt,
-					PasswordHash = HashPassword(request.Password, passwordSalt),
+					PasswordHash = _passwordHelper.HashPassword(request.Password, passwordSalt),
 				};
+				user.DateCreated = DateTime.Now;
+				user.DateModified = DateTime.Now;
 
-				await _unitOfWork.UserRepository.CreateAsync(user);
+				_unitOfWork.UserRepository.Create(user);
+				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
 			}
 			catch (Exception ex)
 			{
+				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
@@ -96,19 +103,21 @@ namespace speezs.Services
 
 				var existingEntity = await _unitOfWork.UserResetPasswordCodeRepository.GetByEmailAsync(email);
 				if (existingEntity != null)
-					await _unitOfWork.UserResetPasswordCodeRepository.RemoveAsync(existingEntity);
+					_unitOfWork.UserResetPasswordCodeRepository.Remove(existingEntity);
 				var entity = new Userresetpasswordcode()
 				{
 					Email = existingUser.Email,
-					CodeHash = HashPassword(code, existingUser.PasswordSalt),
+					CodeHash = _passwordHelper.HashPassword(code, existingUser.PasswordSalt),
 					Expire = DateTime.Now.AddDays(1)
 				};
 
-				await _unitOfWork.UserResetPasswordCodeRepository.CreateAsync(entity);
+				_unitOfWork.UserResetPasswordCodeRepository.Create(entity);
+				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
 			}
 			catch (Exception ex)
 			{
+				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
@@ -121,45 +130,27 @@ namespace speezs.Services
 				var code = await _unitOfWork.UserResetPasswordCodeRepository.GetByEmailAsync(request.Email);
 				if (code == null) return new ServiceResult(404, "Not Found");
 
-				var existingUser = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
-				if (existingUser == null) return new ServiceResult(404, "Not Found");
+				var user = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
+				if (user == null) return new ServiceResult(404, "Not Found");
 
-				if (!code.CodeHash.Equals(HashPassword(request.Code, existingUser.PasswordSalt)))
+				if (!code.CodeHash.Equals(_passwordHelper.HashPassword(request.Code, user.PasswordSalt)))
 					if (code == null) return new ServiceResult(404, "Not Found");
 
-				existingUser.PasswordSalt = GetRandomString();
-				existingUser.PasswordHash = HashPassword(request.Password, existingUser.PasswordSalt);
+				user.PasswordSalt = _passwordHelper.GetSalt();
+				user.PasswordHash = _passwordHelper.HashPassword(request.Password, user.PasswordSalt);
+				user.DateModified = DateTime.Now;
 
-				await _unitOfWork.UserRepository.UpdateAsync(existingUser);
-				await _unitOfWork.UserResetPasswordCodeRepository.RemoveAsync(code);
-
+				_unitOfWork.UserRepository.Update(user);
+				_unitOfWork.UserResetPasswordCodeRepository.Remove(code);
+				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
 			}
 			catch (Exception ex)
 			{
+				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
 				return new ServiceResult(500, ex.Message);
 			}
 		}
-
-
-		private string HashPassword(string password, string salt)
-		{
-			var saltBytes = Encoding.UTF8.GetBytes(salt);
-			var hash = Rfc2898DeriveBytes.Pbkdf2(
-		Encoding.UTF8.GetBytes(password),
-		saltBytes,
-		350000,
-		HashAlgorithmName.SHA512,
-		64);
-			return Convert.ToHexString(hash);
-		}
-
-		private string GetRandomString()
-		{
-			return Convert.ToBase64String(RandomNumberGenerator.GetBytes(16));
-		}
-
-
 	}
 }

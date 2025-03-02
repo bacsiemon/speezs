@@ -25,7 +25,7 @@ namespace speezs.API.Controllers
 					return BadRequest(ModelState);
 
 				var response = await _authService.Login(request);
-				return StatusCode(response.Status, response.Data);
+				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex) 
 			{
@@ -44,7 +44,7 @@ namespace speezs.API.Controllers
 					return BadRequest(ModelState);
 
 				var response = await _authService.Register(request);
-				return StatusCode(response.Status, response.Data);
+				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
 			{
@@ -63,7 +63,7 @@ namespace speezs.API.Controllers
 					return BadRequest(ModelState);
 
 				var response = await _authService.ForgotPassword(email);
-				return StatusCode(response.Status, response.Data);
+				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
 			{
@@ -81,7 +81,7 @@ namespace speezs.API.Controllers
 					return BadRequest(ModelState);
 
 				var response = await _authService.ResetPassword(request);
-				return StatusCode(response.Status, response.Data);
+				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
 			{

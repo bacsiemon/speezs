@@ -43,6 +43,8 @@ public partial class User
 
     public virtual ICollection<Transfer> Transfers { get; set; } = new List<Transfer>();
 
+    public virtual ICollection<Userclaim> Userclaims { get; set; } = new List<Userclaim>();
+
     public virtual Userpreference Userpreference { get; set; }
 
     public virtual ICollection<Usersubscription> Usersubscriptions { get; set; } = new List<Usersubscription>();

@@ -15,9 +15,24 @@ namespace speezs.DataAccess.Repositories
 		{
 		}
 
+		public new async Task<List<User>> GetAllAsync()
+		{
+			return await _context.Users.Where( u=> u.IsDeleted != true).ToListAsync();
+		}
+
+		public new async Task<User?> GetByIdAsync(int id)
+		{
+			return await _context.Users.FirstOrDefaultAsync(u => u.UserId == id && u.IsDeleted != true);
+		}
+
 		public async Task<User?> GetByEmailAsync(string email)
 		{
-			return await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+			return await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email) && u.IsDeleted != true);
+		}
+
+		public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
+		{
+			return await _context.Users.FirstOrDefaultAsync(u =>u.PhoneNumber.Equals(phoneNumber) && u.IsDeleted == false);
 		}
 	}
 }
