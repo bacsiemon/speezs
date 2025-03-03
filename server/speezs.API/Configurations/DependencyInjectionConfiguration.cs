@@ -31,6 +31,7 @@ namespace speezs.API.Configurations
 			builder.Services.AddScoped<ILookService, LookService>();
 			builder.Services.AddScoped<ITransferService, TransferService>();
 			builder.Services.AddScoped<ISubscriptionTierService, SubscriptionTierService>();
+			builder.Services.AddScoped<IReviewService, ReviewService>();
 		}
 
 		public static void ConfigureServices(WebApplicationBuilder builder)

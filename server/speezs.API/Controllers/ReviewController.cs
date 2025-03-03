@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using speezs.Services.Interfaces;
-using speezs.Services.Models.SubscriptionTier;
+using speezs.Services.Models.Review;
 
 namespace speezs.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class SubscriptionTierController : ControllerBase
+	public class ReviewController : ControllerBase
 	{
-		private ISubscriptionTierService _service;
+		private IReviewService _service;
 
-		public SubscriptionTierController(ISubscriptionTierService subscriptionTierService)
+		public ReviewController(IReviewService service)
 		{
-			_service = subscriptionTierService;
+			_service = service;
 		}
 
 		[HttpGet]
@@ -71,7 +71,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create(CreateSubscriptionTierRequest request)
+		public async Task<IActionResult> Create(CreateReviewRequest request)
 		{
 			try
 			{
@@ -89,7 +89,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(UpdateSubscriptionTierRequest request)
+		public async Task<IActionResult> Update(UpdateReviewRequest request)
 		{
 			try
 			{
