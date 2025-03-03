@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using speezs.DataAccess;
 using speezs.DataAccess.Models;
+using speezs.DataAccess;
 using speezs.Services.Base;
 using speezs.Services.Interfaces;
-using speezs.Services.Models.Look;
-using speezs.Services.Models.MakeupProduct;
+using speezs.Services.Models.Review;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +12,22 @@ using System.Threading.Tasks;
 
 namespace speezs.Services
 {
-	public class LookService : ILookService
+	public class ReviewService : IReviewService
 	{
 		private UnitOfWork _unitOfWork;
 		private IMapper _mapper;
 
-		public LookService(UnitOfWork unitOfWork, IMapper mapper)
+		public ReviewService(IMapper mapper, UnitOfWork unitOfWork)
 		{
-			_unitOfWork = unitOfWork;
 			_mapper = mapper;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<IServiceResult> GetAllAsync()
 		{
 			try
 			{
-				return new ServiceResult(200, "Success", await _unitOfWork.LookRepository.GetAllAsync());
+				return new ServiceResult(200, "Success", await _unitOfWork.ReviewRepository.GetAllAsync());
 			}
 			catch (Exception ex)
 			{
@@ -40,7 +39,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				var result = await _unitOfWork.LookRepository.GetByIdAsync(id);
+				var result = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
 				if (result == null)
 					return new ServiceResult(404, "Not Found");
 				return new ServiceResult(200, "Success", result);
@@ -55,7 +54,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				var result = await _unitOfWork.LookRepository.GetPagingListAsync(page: page, size: size);
+				var result = await _unitOfWork.ReviewRepository.GetPagingListAsync(page: page, size: size);
 				return new ServiceResult(200, "Success", result);
 			}
 			catch (Exception ex)
@@ -66,16 +65,14 @@ namespace speezs.Services
 			}
 		}
 
-		public async Task<IServiceResult> CreateAsync(CreateLookRequest request)
+		public async Task<IServiceResult> CreateAsync(CreateReviewRequest request)
 		{
 			try
 			{
-				var entity = _mapper.Map<Look>(request);
+				var entity = _mapper.Map<Review>(request);
 				entity.DateModified = DateTime.Now;
 				entity.DateCreated = DateTime.Now;
-				_unitOfWork.LookRepository.Create(entity);
-				entity.AvgRating = 0;
-				entity.TotalTransfers = 0;
+				_unitOfWork.ReviewRepository.Create(entity);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success", entity);
 			}
@@ -87,17 +84,17 @@ namespace speezs.Services
 			}
 		}
 
-		public async Task<IServiceResult> UpdateAsync(UpdateLookRequest request)
+		public async Task<IServiceResult> UpdateAsync(UpdateReviewRequest request)
 		{
 			try
 			{
-				var entity = await _unitOfWork.LookRepository.GetByIdAsync(request.LookId);
+				var entity = await _unitOfWork.ReviewRepository.GetByIdAsync(request.ReviewId);
 				if (entity == null)
 					return new ServiceResult(404, "Not found");
 
-				entity = _mapper.Map<UpdateLookRequest, Look>(request, entity);
+				entity = _mapper.Map<UpdateReviewRequest, Review>(request, entity);
 				entity.DateModified = DateTime.Now;
-				_unitOfWork.LookRepository.Update(entity);
+				_unitOfWork.ReviewRepository.Update(entity);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success", entity);
 			}
@@ -113,11 +110,11 @@ namespace speezs.Services
 		{
 			try
 			{
-				var entity = await _unitOfWork.LookRepository.GetByIdAsync(id);
+				var entity = await _unitOfWork.ReviewRepository.GetByIdAsync(id);
 				if (entity == null)
 					return new ServiceResult(404, "Not found");
 
-				_unitOfWork.LookRepository.Remove(entity);
+				_unitOfWork.ReviewRepository.Remove(entity);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
 			}
