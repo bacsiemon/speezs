@@ -25,6 +25,8 @@ public partial class SpeezsDbContext : DbContext
 
     public virtual DbSet<Review> Reviews { get; set; }
 
+    public virtual DbSet<Role> Roles { get; set; }
+
     public virtual DbSet<Subscriptiontier> Subscriptiontiers { get; set; }
 
     public virtual DbSet<Transfer> Transfers { get; set; }
@@ -36,6 +38,8 @@ public partial class SpeezsDbContext : DbContext
     public virtual DbSet<Userpreference> Userpreferences { get; set; }
 
     public virtual DbSet<Userresetpasswordcode> Userresetpasswordcodes { get; set; }
+
+    public virtual DbSet<Userrole> Userroles { get; set; }
 
     public virtual DbSet<Usersubscription> Usersubscriptions { get; set; }
 
@@ -276,6 +280,19 @@ public partial class SpeezsDbContext : DbContext
                 .HasConstraintName("reviews_user_id_fkey");
         });
 
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("roles_pk");
+
+            entity.ToTable("roles");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.RoleName)
+                .IsRequired()
+                .HasMaxLength(32)
+                .HasColumnName("role_name");
+        });
+
         modelBuilder.Entity<Subscriptiontier>(entity =>
         {
             entity.HasKey(e => e.TierId).HasName("subscriptiontiers_pkey");
@@ -508,6 +525,26 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.Expire)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("expire");
+        });
+
+        modelBuilder.Entity<Userrole>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("userroles");
+
+            entity.Property(e => e.RoleId).HasColumnName("role_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Role).WithMany()
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("userroles_roles_id_fk");
+
+            entity.HasOne(d => d.User).WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("userroles_users_user_id_fk");
         });
 
         modelBuilder.Entity<Usersubscription>(entity =>
