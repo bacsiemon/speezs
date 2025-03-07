@@ -1,4 +1,6 @@
-﻿using StackExchange.Redis;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +12,13 @@ namespace speezs.Services.Helpers
 {
 	public class PasswordHelper
 	{
+		private IDistributedCache cache;
 
-		public PasswordHelper()
+		public PasswordHelper(IDistributedCache cache)
 		{
-			
+			this.cache = cache;
 		}
+
 		public string HashPassword(string password, string salt)
 		{
 			var saltBytes = Encoding.UTF8.GetBytes(salt);
@@ -32,13 +36,20 @@ namespace speezs.Services.Helpers
 			return Convert.ToBase64String(RandomNumberGenerator.GetBytes(16));
 		}
 
-		public void CreateResetPasswordCode(int userId)
+		public async Task<string> CreateResetPasswordCode(int userId)
 		{
-			ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost");
-			IDatabase db = redis.GetDatabase();
+			var code = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16)).Substring(0,5);
+			await cache.SetRecordAsync<string>($"RESETPASS_{userId}", code);
+			Console.WriteLine(code);
+			return code;
+		}
 
-			db.StringSet("foo", "bar");
-			Console.WriteLine(db.StringGet("foo"));
+		public async Task<bool> CheckResetPasswordCode(int userId, string code)
+		{
+			var result = await cache.GetRecordAsync<string?>($"RESETPASS_{userId}");
+			if (!result.Equals(code)) return false;
+			await cache.RemoveAsync($"RESETPASS_{userId}");
+			return true;
 		}
 	}
 }

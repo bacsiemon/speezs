@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 DependencyInjectionConfiguration.Configure(builder);
 JwtConfiguration.Configure(builder);
 JsonConfiguration.Configure(builder);
+RedisConfiguration.Configure(builder);
 
 var app = builder.Build();
 
