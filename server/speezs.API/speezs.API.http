@@ -1,6 +1,6 @@
-@speezs.API_HostAddress = http://localhost:8080
+@speezs.API_HostAddress = http://localhost:5001
 
-GET {{speezs.API_HostAddress}}/weatherforecast/
+get {{speezs.API_HostAddress}}/swagger
 Accept: application/json
 
 ###

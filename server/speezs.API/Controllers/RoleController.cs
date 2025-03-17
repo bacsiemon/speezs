@@ -1,20 +1,19 @@
-﻿
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using speezs.Services.Interfaces;
-using speezs.Services.Models.Look;
+using speezs.Services.Models.Role;
 
 namespace speezs.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class LookController : ControllerBase
+	public class RoleController : ControllerBase
 	{
-		private ILookService _lookService;
+		private IRoleService _roleService;
 
-		public LookController(ILookService LookService)
+		public RoleController(IRoleService RoleService)
 		{
-			_lookService = LookService;
+			_roleService = RoleService;
 		}
 
 		[HttpGet]
@@ -24,7 +23,7 @@ namespace speezs.API.Controllers
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
-				var response = await _lookService.GetAllAsync();
+				var response = await _roleService.GetAllAsync();
 				return StatusCode(response.Status, response.Data ?? response.Message);
 
 			}
@@ -43,7 +42,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _lookService.GetByIdAsync(id);
+				var response = await _roleService.GetByIdAsync(id);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -61,7 +60,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _lookService.GetPaginateAsync(page, size);
+				var response = await _roleService.GetPaginateAsync(page, size);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -72,14 +71,14 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create(CreateLookRequest request)
+		public async Task<IActionResult> Create(CreateRoleRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _lookService.CreateAsync(request);
+				var response = await _roleService.CreateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -90,14 +89,14 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPut]
-		public async Task<IActionResult> Update(UpdateLookRequest request)
+		public async Task<IActionResult> Update(UpdateRoleRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _lookService.UpdateAsync(request);
+				var response = await _roleService.UpdateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -115,7 +114,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _lookService.DeleteAsync(id);
+				var response = await _roleService.DeleteAsync(id);
 				return (response.Status >= 200 && response.Status <= 299) ?
 					NoContent() : StatusCode(response.Status, response.Message);
 			}
@@ -125,6 +124,5 @@ namespace speezs.API.Controllers
 				return StatusCode(500, ex.Message);
 			}
 		}
-
 	}
 }
