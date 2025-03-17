@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class UserResetPasswordCodeRepository : GenericRepository<Userresetpasswordcode>
+	public class UserResetPasswordCodeRepository : GenericRepository<UserResetPasswordCode>
 	{
 		public UserResetPasswordCodeRepository(SpeezsDbContext context) : base(context)
 		{
 		}
 
-		public async Task<Userresetpasswordcode?> GetByEmailAsync(string email)
+		public async Task<UserResetPasswordCode?> GetByEmailAsync(string email)
 		{
 			return await _context.Userresetpasswordcodes.FirstOrDefaultAsync(u => u.Email.Equals(email));
 		}

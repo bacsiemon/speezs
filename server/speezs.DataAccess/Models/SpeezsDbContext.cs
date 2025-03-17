@@ -13,37 +13,41 @@ public partial class SpeezsDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Collectionlook> Collectionlooks { get; set; }
+    public virtual DbSet<CollectionLook> Collectionlooks { get; set; }
 
-    public virtual DbSet<Favoritecollection> Favoritecollections { get; set; }
+    public virtual DbSet<FavoriteCollection> Favoritecollections { get; set; }
 
     public virtual DbSet<Look> Looks { get; set; }
 
-    public virtual DbSet<Lookproduct> Lookproducts { get; set; }
+    public virtual DbSet<LookProduct> Lookproducts { get; set; }
 
-    public virtual DbSet<Makeupproduct> Makeupproducts { get; set; }
+    public virtual DbSet<MakeupProduct> Makeupproducts { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
 
-    public virtual DbSet<Subscriptiontier> Subscriptiontiers { get; set; }
+    public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<SubscriptionTier> Subscriptiontiers { get; set; }
 
     public virtual DbSet<Transfer> Transfers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<Userclaim> Userclaims { get; set; }
+    public virtual DbSet<UserClaim> Userclaims { get; set; }
 
-    public virtual DbSet<Userpreference> Userpreferences { get; set; }
+    public virtual DbSet<UserPreference> Userpreferences { get; set; }
 
-    public virtual DbSet<Userresetpasswordcode> Userresetpasswordcodes { get; set; }
+    public virtual DbSet<UserResetPasswordCode> Userresetpasswordcodes { get; set; }
 
-    public virtual DbSet<Usersubscription> Usersubscriptions { get; set; }
+    public virtual DbSet<UserRole> Userroles { get; set; }
+
+    public virtual DbSet<UserSubscription> Usersubscriptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
 
-        modelBuilder.Entity<Collectionlook>(entity =>
+        modelBuilder.Entity<CollectionLook>(entity =>
         {
             entity.HasKey(e => e.CollectionLookId).HasName("collectionlooks_pkey");
 
@@ -76,7 +80,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasConstraintName("collectionlooks_look_id_fkey");
         });
 
-        modelBuilder.Entity<Favoritecollection>(entity =>
+        modelBuilder.Entity<FavoriteCollection>(entity =>
         {
             entity.HasKey(e => e.CollectionId).HasName("favoritecollections_pkey");
 
@@ -157,7 +161,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasConstraintName("looks_created_by_fkey");
         });
 
-        modelBuilder.Entity<Lookproduct>(entity =>
+        modelBuilder.Entity<LookProduct>(entity =>
         {
             entity.HasKey(e => e.LookProductId).HasName("lookproducts_pkey");
 
@@ -197,7 +201,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasConstraintName("lookproducts_product_id_fkey");
         });
 
-        modelBuilder.Entity<Makeupproduct>(entity =>
+        modelBuilder.Entity<MakeupProduct>(entity =>
         {
             entity.HasKey(e => e.ProductId).HasName("makeupproducts_pkey");
 
@@ -276,7 +280,20 @@ public partial class SpeezsDbContext : DbContext
                 .HasConstraintName("reviews_user_id_fkey");
         });
 
-        modelBuilder.Entity<Subscriptiontier>(entity =>
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("roles_pk");
+
+            entity.ToTable("roles");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.RoleName)
+                .IsRequired()
+                .HasMaxLength(32)
+                .HasColumnName("role_name");
+        });
+
+        modelBuilder.Entity<SubscriptionTier>(entity =>
         {
             entity.HasKey(e => e.TierId).HasName("subscriptiontiers_pkey");
 
@@ -419,7 +436,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("refresh_token_expiry");
         });
 
-        modelBuilder.Entity<Userclaim>(entity =>
+        modelBuilder.Entity<UserClaim>(entity =>
         {
             entity.HasKey(e => e.ClaimId).HasName("userclaims_pk");
 
@@ -446,7 +463,7 @@ public partial class SpeezsDbContext : DbContext
                 .HasConstraintName("user_id");
         });
 
-        modelBuilder.Entity<Userpreference>(entity =>
+        modelBuilder.Entity<UserPreference>(entity =>
         {
             entity.HasKey(e => e.PreferenceId).HasName("userpreferences_pkey");
 
@@ -488,11 +505,11 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithOne(p => p.Userpreference)
-                .HasForeignKey<Userpreference>(d => d.UserId)
+                .HasForeignKey<UserPreference>(d => d.UserId)
                 .HasConstraintName("userpreferences_user_id_fkey");
         });
 
-        modelBuilder.Entity<Userresetpasswordcode>(entity =>
+        modelBuilder.Entity<UserResetPasswordCode>(entity =>
         {
             entity.HasKey(e => e.Email).HasName("userresetpasswordcodes_pkey");
 
@@ -510,7 +527,27 @@ public partial class SpeezsDbContext : DbContext
                 .HasColumnName("expire");
         });
 
-        modelBuilder.Entity<Usersubscription>(entity =>
+        modelBuilder.Entity<UserRole>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("userroles");
+
+            entity.Property(e => e.RoleId).HasColumnName("role_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Role).WithMany()
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("userroles_roles_id_fk");
+
+            entity.HasOne(d => d.User).WithMany()
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("userroles_users_user_id_fk");
+        });
+
+        modelBuilder.Entity<UserSubscription>(entity =>
         {
             entity.HasKey(e => e.UserSubscriptionId).HasName("usersubscriptions_pkey");
 

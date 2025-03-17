@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class Makeupproduct
+public partial class MakeupProduct
 {
     public int ProductId { get; set; }
 
@@ -31,5 +31,5 @@ public partial class Makeupproduct
 
     public DateTime? DateDeleted { get; set; }
 
-    public virtual ICollection<Lookproduct> Lookproducts { get; set; } = new List<Lookproduct>();
+    public virtual ICollection<LookProduct> Lookproducts { get; set; } = new List<LookProduct>();
 }

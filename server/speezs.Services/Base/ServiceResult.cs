@@ -26,6 +26,11 @@ namespace speezs.Services.Base
             Message = "Action fail";
         }
 
+		public ServiceResult(int status)
+		{
+			Status = status;
+		}
+
         public ServiceResult(int status, string message)
         {
             Status = status;

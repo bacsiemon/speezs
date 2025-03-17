@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class SubscriptionTierRepository : GenericRepository<Subscriptiontier>
+	public class SubscriptionTierRepository : GenericRepository<SubscriptionTier>
 	{
 		public SubscriptionTierRepository(SpeezsDbContext context) : base(context)
 		{

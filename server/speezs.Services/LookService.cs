@@ -28,7 +28,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				return new ServiceResult(200, "Success", await _unitOfWork.LookProductRepository.GetAllAsync());
+				return new ServiceResult(200, "Success", await _unitOfWork.LookRepository.GetAllAsync());
 			}
 			catch (Exception ex)
 			{
@@ -40,7 +40,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				var result = await _unitOfWork.LookProductRepository.GetByIdAsync(id);
+				var result = await _unitOfWork.LookRepository.GetByIdAsync(id);
 				if (result == null)
 					return new ServiceResult(404, "Not Found");
 				return new ServiceResult(200, "Success", result);
@@ -55,7 +55,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				var result = await _unitOfWork.LookProductRepository.GetPagingListAsync(page: page, size: size);
+				var result = await _unitOfWork.LookRepository.GetPagingListAsync(page: page, size: size);
 				return new ServiceResult(200, "Success", result);
 			}
 			catch (Exception ex)

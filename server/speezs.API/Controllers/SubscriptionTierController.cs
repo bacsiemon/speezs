@@ -9,11 +9,11 @@ namespace speezs.API.Controllers
 	[ApiController]
 	public class SubscriptionTierController : ControllerBase
 	{
-		private ISubscriptionTierService _subscriptionTierService;
+		private ISubscriptionTierService _service;
 
 		public SubscriptionTierController(ISubscriptionTierService subscriptionTierService)
 		{
-			_subscriptionTierService = subscriptionTierService;
+			_service = subscriptionTierService;
 		}
 
 		[HttpGet]
@@ -23,7 +23,7 @@ namespace speezs.API.Controllers
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
-				var response = await _subscriptionTierService.GetAllAsync();
+				var response = await _service.GetAllAsync();
 				return StatusCode(response.Status, response.Data ?? response.Message);
 
 			}
@@ -42,7 +42,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _subscriptionTierService.GetByIdAsync(id);
+				var response = await _service.GetByIdAsync(id);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -60,7 +60,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _subscriptionTierService.GetPaginateAsync(page, size);
+				var response = await _service.GetPaginateAsync(page, size);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -78,7 +78,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _subscriptionTierService.CreateAsync(request);
+				var response = await _service.CreateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -96,7 +96,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _subscriptionTierService.UpdateAsync(request);
+				var response = await _service.UpdateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -114,7 +114,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _subscriptionTierService.DeleteAsync(id);
+				var response = await _service.DeleteAsync(id);
 				return (response.Status >= 200 && response.Status <= 299) ?
 					NoContent() : StatusCode(response.Status, response.Message);
 			}

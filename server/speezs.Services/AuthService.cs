@@ -96,23 +96,9 @@ namespace speezs.Services
 			{
 				var existingUser = await _unitOfWork.UserRepository.GetByEmailAsync(email);
 				if (existingUser == null)
-					return new ServiceResult(200, "Success");
+					return new ServiceResult(404, "Not Found");
 
-				var code = Convert.ToBase64String(RandomNumberGenerator.GetBytes(128 / 8)).Substring(0, 6).ToUpper();
-				Console.WriteLine(code);
-
-				var existingEntity = await _unitOfWork.UserResetPasswordCodeRepository.GetByEmailAsync(email);
-				if (existingEntity != null)
-					_unitOfWork.UserResetPasswordCodeRepository.Remove(existingEntity);
-				var entity = new Userresetpasswordcode()
-				{
-					Email = existingUser.Email,
-					CodeHash = _passwordHelper.HashPassword(code, existingUser.PasswordSalt),
-					Expire = DateTime.Now.AddDays(1)
-				};
-
-				_unitOfWork.UserResetPasswordCodeRepository.Create(entity);
-				await _unitOfWork.SaveChangesAsync();
+				await _passwordHelper.CreateResetPasswordCode(existingUser.UserId);
 				return new ServiceResult(200, "Success");
 			}
 			catch (Exception ex)
@@ -127,21 +113,18 @@ namespace speezs.Services
 		{
 			try
 			{
-				var code = await _unitOfWork.UserResetPasswordCodeRepository.GetByEmailAsync(request.Email);
-				if (code == null) return new ServiceResult(404, "Not Found");
 
 				var user = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
 				if (user == null) return new ServiceResult(404, "Not Found");
 
-				if (!code.CodeHash.Equals(_passwordHelper.HashPassword(request.Code, user.PasswordSalt)))
-					if (code == null) return new ServiceResult(404, "Not Found");
+				if (!await _passwordHelper.CheckResetPasswordCode(user.UserId, request.Code))
+					return new ServiceResult(404, "Incorrect code");
 
 				user.PasswordSalt = _passwordHelper.GetSalt();
 				user.PasswordHash = _passwordHelper.HashPassword(request.Password, user.PasswordSalt);
 				user.DateModified = DateTime.Now;
 
 				_unitOfWork.UserRepository.Update(user);
-				_unitOfWork.UserResetPasswordCodeRepository.Remove(code);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
 			}
