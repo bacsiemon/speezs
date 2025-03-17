@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class Userclaim
+public partial class UserClaim
 {
     public int UserId { get; set; }
 

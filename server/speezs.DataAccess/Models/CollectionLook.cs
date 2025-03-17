@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class Collectionlook
+public partial class CollectionLook
 {
     public int CollectionLookId { get; set; }
 
@@ -23,7 +23,7 @@ public partial class Collectionlook
 
     public DateTime? DateDeleted { get; set; }
 
-    public virtual Favoritecollection Collection { get; set; }
+    public virtual FavoriteCollection Collection { get; set; }
 
     public virtual Look Look { get; set; }
 }

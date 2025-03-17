@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace speezs.DataAccess.Models;
 
-public partial class Userrole
+public partial class UserRole
 {
     public int UserId { get; set; }
 

@@ -39,8 +39,8 @@ namespace speezs.Services.Configurations
 
 		public void ConfigureMakeupProduct()
 		{
-			CreateMap<CreateMakeupProductRequest, Makeupproduct>();
-			CreateMap<UpdateMakeupProductRequest, Makeupproduct>()
+			CreateMap<CreateMakeupProductRequest, MakeupProduct>();
+			CreateMap<UpdateMakeupProductRequest, MakeupProduct>()
 				.ForMember(src => src.ProductId, opt => opt.Ignore())
 				.ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name != null))
 				.ForMember(dest => dest.Brand, opt => opt.Condition(src => src.Brand != null))
@@ -71,8 +71,8 @@ namespace speezs.Services.Configurations
 
 		public void ConfigureSubscriptionTier()
 		{
-			CreateMap<CreateSubscriptionTierRequest, Subscriptiontier>();
-			CreateMap<UpdateSubscriptionTierRequest, Subscriptiontier>()
+			CreateMap<CreateSubscriptionTierRequest, SubscriptionTier>();
+			CreateMap<UpdateSubscriptionTierRequest, SubscriptionTier>()
 			.ForMember(dest => dest.TierId, opt => opt.Ignore()) // TierId should not be updated from request
 			.ForMember(dest => dest.Name, opt => opt.Condition(src => src.Name != null))
 			.ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null))

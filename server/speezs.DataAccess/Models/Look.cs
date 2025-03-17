@@ -33,11 +33,11 @@ public partial class Look
 
     public DateTime? DateDeleted { get; set; }
 
-    public virtual ICollection<Collectionlook> Collectionlooks { get; set; } = new List<Collectionlook>();
+    public virtual ICollection<CollectionLook> Collectionlooks { get; set; } = new List<CollectionLook>();
 
     public virtual User CreatedByNavigation { get; set; }
 
-    public virtual ICollection<Lookproduct> Lookproducts { get; set; } = new List<Lookproduct>();
+    public virtual ICollection<LookProduct> Lookproducts { get; set; } = new List<LookProduct>();
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 

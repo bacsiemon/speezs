@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class LookProductRepository : GenericRepository<Lookproduct>
+	public class LookProductRepository : GenericRepository<LookProduct>
 	{
 		public LookProductRepository(SpeezsDbContext context) : base(context)
 		{

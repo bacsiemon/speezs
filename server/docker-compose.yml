@@ -1,0 +1,6 @@
+services:
+  speezs.api:
+    image: ${DOCKER_REGISTRY-}speezsapi
+    build:
+      context: .
+      dockerfile: speezs.API/Dockerfile

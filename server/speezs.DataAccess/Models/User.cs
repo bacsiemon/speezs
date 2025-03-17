@@ -35,7 +35,7 @@ public partial class User
 
     public DateTime? RefreshTokenExpiry { get; set; }
 
-    public virtual ICollection<Favoritecollection> Favoritecollections { get; set; } = new List<Favoritecollection>();
+    public virtual ICollection<FavoriteCollection> Favoritecollections { get; set; } = new List<FavoriteCollection>();
 
     public virtual ICollection<Look> Looks { get; set; } = new List<Look>();
 
@@ -43,9 +43,9 @@ public partial class User
 
     public virtual ICollection<Transfer> Transfers { get; set; } = new List<Transfer>();
 
-    public virtual ICollection<Userclaim> Userclaims { get; set; } = new List<Userclaim>();
+    public virtual ICollection<UserClaim> Userclaims { get; set; } = new List<UserClaim>();
 
-    public virtual Userpreference Userpreference { get; set; }
+    public virtual UserPreference Userpreference { get; set; }
 
-    public virtual ICollection<Usersubscription> Usersubscriptions { get; set; } = new List<Usersubscription>();
+    public virtual ICollection<UserSubscription> Usersubscriptions { get; set; } = new List<UserSubscription>();
 }
