@@ -63,7 +63,7 @@ namespace speezs.API.Configurations
 			.AddJsonFile("appsettings.json")
 			.Build();
 			builder.Services.AddSingleton<IConfiguration>(config);
-			builder.Services.AddDbContext<SpeezsDbContext>(options => options.UseNpgsql(builder.Configuration["ConnectionStrings:PostgresHttps"]));
+			builder.Services.AddDbContext<SpeezsDbContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STR_POSTGRES")));
 		}
 
 		public static void ConfigureSerialization(WebApplicationBuilder builder)

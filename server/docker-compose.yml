@@ -4,3 +4,4 @@ services:
     build:
       context: .
       dockerfile: speezs.API/Dockerfile
+    network_mode: bridge
