@@ -20,12 +20,20 @@ var app = builder.Build();
 
 //if (app.Environment.IsDevelopment())
 //{
-//	app.UseSwagger();
-//	app.UseSwaggerUI();
-//}
-
 app.UseSwagger();
 app.UseSwaggerUI();
+//}
+
+//app.UseSwagger(c =>
+//{
+//	c.RouteTemplate = "professorniyaniya/swagger/{documentname}/swagger.json";
+//});
+
+//app.UseSwaggerUI(c =>
+//{
+//	c.SwaggerEndpoint("/professorniyaniya/swagger/v1/swagger.json", "My Cool API V1");
+//	c.RoutePrefix = "professorniyaniya/swagger";
+//});
 
 app.UseCors(builder =>
 {
