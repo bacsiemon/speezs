@@ -2,16 +2,27 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
-public partial class UserRole
+[Table("userroles")]
+public partial class Userrole
 {
+    [Key]
+    [Column("user_id")]
     public int UserId { get; set; }
 
+    [Column("role_id")]
     public int RoleId { get; set; }
 
+    [ForeignKey("RoleId")]
+    [InverseProperty("Userroles")]
     public virtual Role Role { get; set; }
 
+    [ForeignKey("UserId")]
+    [InverseProperty("Userrole")]
     public virtual User User { get; set; }
 }

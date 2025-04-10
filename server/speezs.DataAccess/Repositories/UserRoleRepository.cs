@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class UserRoleRepository : GenericRepository<UserRole>
+	public class UserRoleRepository : GenericRepository<Userrole>
 	{
 		public UserRoleRepository(SpeezsDbContext context) : base(context)
 		{
@@ -20,5 +20,7 @@ namespace speezs.DataAccess.Repositories
 		{
 			return await _context.Userroles.CountAsync(b => b.RoleId == roleId);
 		}
+
+		
 	}
 }

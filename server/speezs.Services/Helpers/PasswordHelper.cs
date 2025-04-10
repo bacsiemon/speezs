@@ -47,7 +47,7 @@ namespace speezs.Services.Helpers
 		public async Task<bool> CheckResetPasswordCode(int userId, string code)
 		{
 			var result = await cache.GetRecordAsync<string?>($"RESETPASS_{userId}");
-			if (!result.Equals(code)) return false;
+			if (result == null || !result.Equals(code)) return false;
 			await cache.RemoveAsync($"RESETPASS_{userId}");
 			return true;
 		}

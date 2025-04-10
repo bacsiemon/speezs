@@ -2,44 +2,73 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
+[Table("looks")]
 public partial class Look
 {
+    [Key]
+    [Column("look_id")]
     public int LookId { get; set; }
 
+    [Required]
+    [Column("name")]
+    [StringLength(100)]
     public string Name { get; set; }
 
+    [Column("description")]
     public string Description { get; set; }
 
+    [Column("created_by")]
     public int? CreatedBy { get; set; }
 
+    [Column("is_public")]
     public bool? IsPublic { get; set; }
 
+    [Column("category")]
+    [StringLength(50)]
     public string Category { get; set; }
 
+    [Column("thumbnail_url")]
+    [StringLength(255)]
     public string ThumbnailUrl { get; set; }
 
+    [Column("avg_rating")]
+    [Precision(3, 2)]
     public decimal? AvgRating { get; set; }
 
+    [Column("total_transfers")]
     public int? TotalTransfers { get; set; }
 
+    [Column("is_deleted")]
     public bool? IsDeleted { get; set; }
 
+    [Column("date_created", TypeName = "timestamp without time zone")]
     public DateTime? DateCreated { get; set; }
 
+    [Column("date_modified", TypeName = "timestamp without time zone")]
     public DateTime? DateModified { get; set; }
 
+    [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
-    public virtual ICollection<CollectionLook> Collectionlooks { get; set; } = new List<CollectionLook>();
+    [InverseProperty("Look")]
+    public virtual ICollection<Collectionlook> Collectionlooks { get; set; } = new List<Collectionlook>();
 
+    [ForeignKey("CreatedBy")]
+    [InverseProperty("Looks")]
     public virtual User CreatedByNavigation { get; set; }
 
-    public virtual ICollection<LookProduct> Lookproducts { get; set; } = new List<LookProduct>();
+    [InverseProperty("Look")]
+    public virtual ICollection<Lookproduct> Lookproducts { get; set; } = new List<Lookproduct>();
 
+    [InverseProperty("Look")]
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+    [InverseProperty("Look")]
     public virtual ICollection<Transfer> Transfers { get; set; } = new List<Transfer>();
 }

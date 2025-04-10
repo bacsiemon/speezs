@@ -71,7 +71,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				var entity = _mapper.Map<MakeupProduct>(request);
+				var entity = _mapper.Map<Makeupproduct>(request);
 				entity.DateModified = DateTime.Now;
 				entity.DateCreated = DateTime.Now;
 				_unitOfWork.MakeupProductRepository.Create(entity);
@@ -94,7 +94,7 @@ namespace speezs.Services
 				if (entity == null)
 					return new ServiceResult(404, "Not found");
 
-				entity = _mapper.Map<UpdateMakeupProductRequest, MakeupProduct>(request, entity);
+				entity = _mapper.Map<UpdateMakeupProductRequest, Makeupproduct>(request, entity);
 				entity.DateModified = DateTime.Now;
 				_unitOfWork.MakeupProductRepository.Update(entity);
 				await _unitOfWork.SaveChangesAsync();

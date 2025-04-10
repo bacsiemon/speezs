@@ -2,36 +2,62 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
+[Table("transfers")]
 public partial class Transfer
 {
+    [Key]
+    [Column("transfer_id")]
     public int TransferId { get; set; }
 
+    [Column("user_id")]
     public int? UserId { get; set; }
 
+    [Column("look_id")]
     public int? LookId { get; set; }
 
+    [Column("source_image_url")]
+    [StringLength(255)]
     public string SourceImageUrl { get; set; }
 
+    [Column("result_image_url")]
+    [StringLength(255)]
     public string ResultImageUrl { get; set; }
 
+    [Column("processing_time")]
+    [Precision(5, 2)]
     public decimal? ProcessingTime { get; set; }
 
+    [Column("status")]
+    [StringLength(20)]
     public string Status { get; set; }
 
+    [Column("ai_model_version")]
+    [StringLength(50)]
     public string AiModelVersion { get; set; }
 
+    [Column("is_deleted")]
     public bool? IsDeleted { get; set; }
 
+    [Column("date_created", TypeName = "timestamp without time zone")]
     public DateTime? DateCreated { get; set; }
 
+    [Column("date_modified", TypeName = "timestamp without time zone")]
     public DateTime? DateModified { get; set; }
 
+    [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
+    [ForeignKey("LookId")]
+    [InverseProperty("Transfers")]
     public virtual Look Look { get; set; }
 
+    [ForeignKey("UserId")]
+    [InverseProperty("Transfers")]
     public virtual User User { get; set; }
 }

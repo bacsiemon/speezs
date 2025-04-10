@@ -21,12 +21,15 @@ namespace speezs.Services
 		private UnitOfWork _unitOfWork;
 		private IMapper _mapper;
 		private PasswordHelper _passwordHelper;
+		private IUserRoleService _userRoleService;
 
-		public UserService(UnitOfWork unitOfWork, IMapper mapper, PasswordHelper passwordHelper)
+
+		public UserService(UnitOfWork unitOfWork, IMapper mapper, PasswordHelper passwordHelper, IUserRoleService userRoleService)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 			_passwordHelper = passwordHelper;
+			_userRoleService = userRoleService;
 		}
 
 
@@ -91,6 +94,12 @@ namespace speezs.Services
 				user.DateModified = DateTime.Now;
 
 				_unitOfWork.UserRepository.Create(user);
+				_unitOfWork.UserRoleRepository.Create(new Userrole
+				{
+					UserId = user.UserId,
+					RoleId = request.RoleId
+				});
+
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
 			}
@@ -132,6 +141,13 @@ namespace speezs.Services
 				user.DateModified = DateTime.Now;
 
 				_unitOfWork.UserRepository.Update(user);
+
+				if (request.RoleId != null) _unitOfWork.UserRoleRepository.Update(new Userrole
+				{
+					UserId = user.UserId,
+					RoleId = request.RoleId.GetValueOrDefault()
+				});
+
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
 			}

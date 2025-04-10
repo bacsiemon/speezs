@@ -37,13 +37,14 @@ namespace speezs.API.Configurations
 			builder.Services.AddScoped<ISubscriptionTierService, SubscriptionTierService>();
 			builder.Services.AddScoped<IReviewService, ReviewService>();
 			builder.Services.AddScoped<IRoleService, RoleService>();
+			builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 		}
 
 		public static void ConfigureServices(WebApplicationBuilder builder)
 		{
 			builder.Services.AddScoped<UnitOfWork>();
-			builder.Services.AddScoped<JwtHelper>();
 			builder.Services.AddScoped<PasswordHelper>();
+			builder.Services.AddScoped<GmailHelper>();
 
 			var configuration = new MapperConfiguration(cfg =>
 			{

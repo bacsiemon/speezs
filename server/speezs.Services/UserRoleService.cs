@@ -4,6 +4,7 @@ using speezs.DataAccess.Models;
 using speezs.DataAccess.Paging;
 using speezs.DataAccess.Repositories;
 using speezs.Services.Base;
+using speezs.Services.Interfaces;
 using speezs.Services.Models.UserRole;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace speezs.Services
 {
-	public class UserRoleService
+	public class UserRoleService : IUserRoleService
 	{
 		private UnitOfWork _unitOfWork;
 
@@ -35,11 +36,11 @@ namespace speezs.Services
 			}
 		}
 
-		public async Task<IServiceResult> GetByIdAsync(int id)
+		public async Task<IServiceResult> GetByUserIdAsync(int userId)
 		{
 			try
 			{
-				var result = await _unitOfWork.UserRoleRepository.GetByIdAsync(id);
+				var result = await _unitOfWork.UserRoleRepository.GetByIdAsync(userId);
 				if (result == null)
 					return new ServiceResult(404, "Not Found");
 				return new ServiceResult(200, "Success", result);
@@ -54,7 +55,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				IPaginate<DataAccess.Models.UserRole> result = await _unitOfWork.UserRoleRepository.GetPagingListAsync(page: page, size: size);
+				IPaginate<DataAccess.Models.Userrole> result = await _unitOfWork.UserRoleRepository.GetPagingListAsync(page: page, size: size);
 				return new ServiceResult(200, "Success", result);
 			}
 			catch (Exception ex)
@@ -84,7 +85,7 @@ namespace speezs.Services
 				if (role.Result == null)
 					return new ServiceResult(404, "Role not found");
 
-				var entity = new UserRole()
+				var entity = new Userrole()
 				{
 					UserId = request.UserId,
 					RoleId = request.RoleId,
