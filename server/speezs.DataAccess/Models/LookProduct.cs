@@ -2,34 +2,56 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
-public partial class LookProduct
+[Table("lookproducts")]
+public partial class Lookproduct
 {
+    [Key]
+    [Column("look_product_id")]
     public int LookProductId { get; set; }
 
+    [Column("look_id")]
     public int? LookId { get; set; }
 
+    [Column("product_id")]
     public int? ProductId { get; set; }
 
+    [Column("application_area")]
+    [StringLength(50)]
     public string ApplicationArea { get; set; }
 
+    [Column("intensity")]
+    [Precision(3, 2)]
     public decimal? Intensity { get; set; }
 
+    [Column("application_order")]
     public int? ApplicationOrder { get; set; }
 
+    [Column("notes")]
     public string Notes { get; set; }
 
+    [Column("is_deleted")]
     public bool? IsDeleted { get; set; }
 
+    [Column("date_created", TypeName = "timestamp without time zone")]
     public DateTime? DateCreated { get; set; }
 
+    [Column("date_modified", TypeName = "timestamp without time zone")]
     public DateTime? DateModified { get; set; }
 
+    [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
+    [ForeignKey("LookId")]
+    [InverseProperty("Lookproducts")]
     public virtual Look Look { get; set; }
 
-    public virtual MakeupProduct Product { get; set; }
+    [ForeignKey("ProductId")]
+    [InverseProperty("Lookproducts")]
+    public virtual Makeupproduct Product { get; set; }
 }

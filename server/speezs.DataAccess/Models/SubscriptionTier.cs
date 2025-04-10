@@ -2,38 +2,61 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
-public partial class SubscriptionTier
+[Table("subscriptiontiers")]
+public partial class Subscriptiontier
 {
+    [Key]
+    [Column("tier_id")]
     public int TierId { get; set; }
 
+    [Required]
+    [Column("name")]
+    [StringLength(50)]
     public string Name { get; set; }
 
+    [Column("description")]
     public string Description { get; set; }
 
+    [Column("price")]
+    [Precision(10, 2)]
     public decimal Price { get; set; }
 
+    [Column("duration_days")]
     public int DurationDays { get; set; }
 
+    [Column("max_transfers")]
     public int? MaxTransfers { get; set; }
 
+    [Column("max_collections")]
     public int? MaxCollections { get; set; }
 
+    [Column("allows_commercial_use")]
     public bool? AllowsCommercialUse { get; set; }
 
+    [Column("priority_processing")]
     public bool? PriorityProcessing { get; set; }
 
+    [Column("is_active")]
     public bool? IsActive { get; set; }
 
+    [Column("is_deleted")]
     public bool? IsDeleted { get; set; }
 
+    [Column("date_created", TypeName = "timestamp without time zone")]
     public DateTime? DateCreated { get; set; }
 
+    [Column("date_modified", TypeName = "timestamp without time zone")]
     public DateTime? DateModified { get; set; }
 
+    [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
-    public virtual ICollection<UserSubscription> Usersubscriptions { get; set; } = new List<UserSubscription>();
+    [InverseProperty("Tier")]
+    public virtual ICollection<Usersubscription> Usersubscriptions { get; set; } = new List<Usersubscription>();
 }

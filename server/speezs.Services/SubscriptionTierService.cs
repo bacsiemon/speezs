@@ -70,7 +70,7 @@ namespace speezs.Services
 		{
 			try
 			{
-				var entity = _mapper.Map<SubscriptionTier>(request);
+				var entity = _mapper.Map<Subscriptiontier>(request);
 				entity.DateModified = DateTime.Now;
 				entity.DateCreated = DateTime.Now;
 				_unitOfWork.SubscriptionTierRepository.Create(entity);
@@ -93,7 +93,7 @@ namespace speezs.Services
 				if (entity == null)
 					return new ServiceResult(404, "Not found");
 
-				entity = _mapper.Map<UpdateSubscriptionTierRequest, SubscriptionTier>(request, entity);
+				entity = _mapper.Map<UpdateSubscriptionTierRequest, Subscriptiontier>(request, entity);
 				entity.DateModified = DateTime.Now;
 				_unitOfWork.SubscriptionTierRepository.Update(entity);
 				await _unitOfWork.SaveChangesAsync();

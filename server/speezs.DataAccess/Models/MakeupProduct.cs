@@ -2,34 +2,58 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
-public partial class MakeupProduct
+[Table("makeupproducts")]
+public partial class Makeupproduct
 {
+    [Key]
+    [Column("product_id")]
     public int ProductId { get; set; }
 
+    [Required]
+    [Column("name")]
+    [StringLength(255)]
     public string Name { get; set; }
 
+    [Column("brand")]
+    [StringLength(100)]
     public string Brand { get; set; }
 
+    [Column("category")]
+    [StringLength(50)]
     public string Category { get; set; }
 
+    [Column("color_code")]
+    [StringLength(7)]
     public string ColorCode { get; set; }
 
+    [Column("description")]
     public string Description { get; set; }
 
+    [Column("image_url")]
+    [StringLength(255)]
     public string ImageUrl { get; set; }
 
+    [Column("is_verified")]
     public bool? IsVerified { get; set; }
 
+    [Column("is_deleted")]
     public bool? IsDeleted { get; set; }
 
+    [Column("date_created", TypeName = "timestamp without time zone")]
     public DateTime? DateCreated { get; set; }
 
+    [Column("date_modified", TypeName = "timestamp without time zone")]
     public DateTime? DateModified { get; set; }
 
+    [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
-    public virtual ICollection<LookProduct> Lookproducts { get; set; } = new List<LookProduct>();
+    [InverseProperty("Product")]
+    public virtual ICollection<Lookproduct> Lookproducts { get; set; } = new List<Lookproduct>();
 }

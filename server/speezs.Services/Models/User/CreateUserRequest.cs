@@ -16,5 +16,7 @@ public class CreateUserRequest
 
     public string FullName { get; set; }
 
-    public string ProfileImageUrl { get; set; }
+    public string? ProfileImageUrl { get; set; }
+
+	public int RoleId { get; set; }
 }

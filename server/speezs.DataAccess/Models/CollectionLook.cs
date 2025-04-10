@@ -2,28 +2,45 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
-public partial class CollectionLook
+[Table("collectionlooks")]
+public partial class Collectionlook
 {
+    [Key]
+    [Column("collection_look_id")]
     public int CollectionLookId { get; set; }
 
+    [Column("collection_id")]
     public int? CollectionId { get; set; }
 
+    [Column("look_id")]
     public int? LookId { get; set; }
 
+    [Column("notes")]
     public string Notes { get; set; }
 
+    [Column("is_deleted")]
     public bool? IsDeleted { get; set; }
 
+    [Column("date_created", TypeName = "timestamp without time zone")]
     public DateTime? DateCreated { get; set; }
 
+    [Column("date_modified", TypeName = "timestamp without time zone")]
     public DateTime? DateModified { get; set; }
 
+    [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
-    public virtual FavoriteCollection Collection { get; set; }
+    [ForeignKey("CollectionId")]
+    [InverseProperty("Collectionlooks")]
+    public virtual Favoritecollection Collection { get; set; }
 
+    [ForeignKey("LookId")]
+    [InverseProperty("Collectionlooks")]
     public virtual Look Look { get; set; }
 }

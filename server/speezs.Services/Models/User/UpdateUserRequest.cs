@@ -14,5 +14,6 @@ namespace speezs.Services.Models.User
 		public string? PhoneNumber { get; set; }
 		public string? FullName { get; set; }
 		public string? ProfileImageUrl { get; set; }
+		public int? RoleId { get; set; }
 	}
 }

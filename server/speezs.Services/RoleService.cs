@@ -76,7 +76,7 @@ namespace speezs.Services
 
 				var role = new DataAccess.Models.Role()
 				{
-					RoleName = request.RoleName
+					RoleName = request.RoleName.ToUpper()
 				};
 
 				_unitOfWork.RoleRepository.Create(role);
@@ -99,7 +99,7 @@ namespace speezs.Services
 				if (existingRole == null)
 					return new ServiceResult(404, "Role Not Found");
 
-				if (!string.IsNullOrEmpty(request.RoleName)) existingRole.RoleName = request.RoleName;
+				if (!string.IsNullOrEmpty(request.RoleName)) existingRole.RoleName = request.RoleName.ToUpper();
 				_unitOfWork.RoleRepository.Update(existingRole);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");

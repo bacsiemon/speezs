@@ -2,36 +2,61 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
 
-public partial class UserPreference
+[Table("userpreferences")]
+[Index("UserId", Name = "userpreferences_user_id_key", IsUnique = true)]
+public partial class Userpreference
 {
+    [Key]
+    [Column("preference_id")]
     public int PreferenceId { get; set; }
 
+    [Column("user_id")]
     public int? UserId { get; set; }
 
+    [Column("skin_tone")]
+    [StringLength(50)]
     public string SkinTone { get; set; }
 
+    [Column("skin_type")]
+    [StringLength(50)]
     public string SkinType { get; set; }
 
+    [Column("face_shape")]
+    [StringLength(50)]
     public string FaceShape { get; set; }
 
+    [Column("eye_color")]
+    [StringLength(50)]
     public string EyeColor { get; set; }
 
+    [Column("preferred_brands")]
     public string PreferredBrands { get; set; }
 
+    [Column("allergies")]
     public string Allergies { get; set; }
 
+    [Column("ai_enhancement_level")]
     public int? AiEnhancementLevel { get; set; }
 
+    [Column("is_deleted")]
     public bool? IsDeleted { get; set; }
 
+    [Column("date_created", TypeName = "timestamp without time zone")]
     public DateTime? DateCreated { get; set; }
 
+    [Column("date_modified", TypeName = "timestamp without time zone")]
     public DateTime? DateModified { get; set; }
 
+    [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
+    [ForeignKey("UserId")]
+    [InverseProperty("Userpreference")]
     public virtual User User { get; set; }
 }
