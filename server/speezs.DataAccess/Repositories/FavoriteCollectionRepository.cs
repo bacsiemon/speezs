@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace speezs.DataAccess.Repositories
 {
-	public class FavoriteCollectionRepository : GenericRepository<FavoriteCollection>
+	public class FavoriteCollectionRepository : GenericRepository<Favoritecollection>
 	{
 		public FavoriteCollectionRepository(SpeezsDbContext context) : base(context)
 		{
