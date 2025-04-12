@@ -18,9 +18,6 @@ public partial class Transaction
     [Column("user_id")]
     public int UserId { get; set; }
 
-    [Column("billing_address_id")]
-    public int BillingAddressId { get; set; }
-
     [Column("amount")]
     public decimal? Amount { get; set; }
 
@@ -31,12 +28,32 @@ public partial class Transaction
     [Column("created_at", TypeName = "timestamp without time zone")]
     public DateTime? CreatedAt { get; set; }
 
-    [Column("updated_at", TypeName = "timestamp without time zone")]
-    public DateTime? UpdatedAt { get; set; }
+    [Column("completed_at", TypeName = "timestamp without time zone")]
+    public DateTime? CompletedAt { get; set; }
 
-    [ForeignKey("BillingAddressId")]
-    [InverseProperty("Transactions")]
-    public virtual BillingAddress BillingAddress { get; set; }
+    [Column("status")]
+    [StringLength(10)]
+    public string Status { get; set; }
+
+    [Column("full_name")]
+    [StringLength(30)]
+    public string FullName { get; set; }
+
+    [Column("country")]
+    [StringLength(20)]
+    public string Country { get; set; }
+
+    [Column("city")]
+    [StringLength(30)]
+    public string City { get; set; }
+
+    [Column("zip_code")]
+    [StringLength(10)]
+    public string ZipCode { get; set; }
+
+    [Column("address")]
+    [StringLength(50)]
+    public string Address { get; set; }
 
     [ForeignKey("UserId")]
     [InverseProperty("Transactions")]

@@ -19,6 +19,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpGet]
+		//[Authorize(Roles = "1")]
 		public async Task<IActionResult> Get()
 		{
 			try
@@ -37,6 +38,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpGet("{id}")]
+		//[Authorize(Roles = "1")]
 		public async Task<IActionResult> Get(int id)
 		{
 			try
@@ -55,6 +57,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpGet("{page}/{size}")]
+		//[Authorize(Roles = "1")]
 		public async Task<IActionResult> Get(int page, int size)
 		{
 			try
@@ -73,6 +76,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPost]
+		//[Authorize(Roles = "1")]
 		public async Task<IActionResult> Create(CreateTransferRequest request)
 		{
 			try
@@ -99,16 +103,17 @@ namespace speezs.API.Controllers
 		//			return BadRequest(ModelState);
 
 		//		var response = await _transferService.UpdateAsync(request);
-		//		return StatusCode(response.Status, response.Data ?? response.Message);
+		//		return HttpStatus(response.Status, response.Data ?? response.Message);
 		//	}
 		//	catch (Exception ex)
 		//	{
 		//		Console.WriteLine(ex.ToString());
-		//		return StatusCode(500, ex.Message);
+		//		return HttpStatus(500, ex.Message);
 		//	}
 		//}
 
 		[HttpDelete]
+		//[Authorize(Roles = "1")]
 		public async Task<IActionResult> Delete(int id)
 		{
 			try

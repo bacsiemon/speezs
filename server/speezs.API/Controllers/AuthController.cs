@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using speezs.Services.Interfaces;
 using speezs.Services.Models.Auth;
@@ -81,6 +82,41 @@ namespace speezs.API.Controllers
 					return BadRequest(ModelState);
 
 				var response = await _authService.ResetPassword(request);
+				return StatusCode(response.Status, response.Data ?? response.Message);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return StatusCode(500, ex.Message);
+			}
+		}
+
+		[HttpPost("RefreshToken")]
+		public async Task<IActionResult> RefreshToken(string refreshToken)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+					return BadRequest(ModelState);
+
+				var response = await _authService.RefreshToken(refreshToken);
+				return StatusCode(response.Status, response.Data ?? response.Message);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return StatusCode(500, ex.Message);
+			}
+		}
+
+		[HttpPost("Logout")]
+		public async Task<IActionResult> Logout(string accessToken)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+					return BadRequest(ModelState);
+				var response = await _authService.Logout(accessToken);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)

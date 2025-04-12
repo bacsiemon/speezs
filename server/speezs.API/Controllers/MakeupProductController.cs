@@ -19,6 +19,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpGet]
+		//[Authorize(Roles = "1,2")]
 		public async Task<IActionResult> Get()
 		{
 			try
@@ -37,6 +38,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpGet("{id}")]
+		//[Authorize(Roles = "1,2")]
 		public async Task<IActionResult> Get(int id)
 		{
 			try
@@ -55,6 +57,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpGet("{page}/{size}")]
+		//[Authorize(Roles = "1,2")]
 		public async Task<IActionResult> Get(int page, int size)
 		{
 			try
@@ -73,6 +76,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPost]
+		//[Authorize(Roles = "1,2")]
 		public async Task<IActionResult> Create(CreateMakeupProductRequest request)
 		{
 			try
@@ -91,6 +95,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpPut]
+		//[Authorize(Roles = "1,2")]
 		public async Task<IActionResult> Update(UpdateMakeupProductRequest request)
 		{
 			try
@@ -109,6 +114,7 @@ namespace speezs.API.Controllers
 		}
 
 		[HttpDelete]
+		//[Authorize(Roles = "1,2")]
 		public async Task<IActionResult> Delete(int id)
 		{
 			try

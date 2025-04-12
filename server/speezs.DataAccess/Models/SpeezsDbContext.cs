@@ -13,8 +13,6 @@ public partial class SpeezsDbContext : DbContext
     {
     }
 
-    public virtual DbSet<BillingAddress> BillingAddresses { get; set; }
-
     public virtual DbSet<Collectionlook> Collectionlooks { get; set; }
 
     public virtual DbSet<Favoritecollection> Favoritecollections { get; set; }
@@ -50,15 +48,6 @@ public partial class SpeezsDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresExtension("uuid-ossp");
-
-        modelBuilder.Entity<BillingAddress>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("billing_address_pk");
-
-            entity.HasOne(d => d.User).WithMany(p => p.BillingAddresses)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("billing_address_users_user_id_fk");
-        });
 
         modelBuilder.Entity<Collectionlook>(entity =>
         {
@@ -149,12 +138,8 @@ public partial class SpeezsDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("transactions_pk");
 
+            entity.Property(e => e.CompletedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-            entity.HasOne(d => d.BillingAddress).WithMany(p => p.Transactions)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("transactions_billing_address_id_fk");
 
             entity.HasOne(d => d.User).WithMany(p => p.Transactions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
