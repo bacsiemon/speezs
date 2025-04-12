@@ -111,7 +111,7 @@ namespace speezs.Services
 			{
 				var existingUser = await _unitOfWork.UserRepository.GetByEmailAsync(email);
 				if (existingUser == null)
-					return new ServiceResult(StatusCode.NOT_FOUND, "Not Found");
+					return new ServiceResult(HttpStatus.NOT_FOUND, "Not Found");
 
 				var code =  await _passwordHelper.CreateResetPasswordCode(existingUser.UserId);
 				_gmailHelper.SendEmailSingle(new EmailRequestModel()
@@ -121,7 +121,7 @@ namespace speezs.Services
 					EmailBody = EmailTemplates.ResetPasswordEmail(code),
 					IsHtml = true
 				});
-				return new ServiceResult(StatusCode.OK, "Success");
+				return new ServiceResult(HttpStatus.OK, "Success");
 			}
 			catch (Exception ex)
 			{
@@ -149,6 +149,60 @@ namespace speezs.Services
 				_unitOfWork.UserRepository.Update(user);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success");
+			}
+			catch (Exception ex)
+			{
+				_unitOfWork.Abort();
+				Console.WriteLine(ex.ToString());
+				return new ServiceResult(500, ex.Message);
+			}
+		}
+
+		public async Task<IServiceResult> RefreshToken(string refreshToken)
+		{
+			try
+			{
+				var user = await _unitOfWork.UserRepository.GetByRefreshTokenAsync(refreshToken);
+				if (user == null || user.RefreshTokenExpiry < DateTime.UtcNow.AddHours(7))
+					return new ServiceResult(HttpStatus.UNAUTHORIZED);
+
+				var accessToken = await GenerateAccessTokenAsync(user);
+				refreshToken = await GenerateRefreshTokenAsync();
+				user.RefreshToken = refreshToken;
+				user.RefreshTokenExpiry = DateTime.Now.AddDays(30);
+				user.DateModified = DateTime.Now;
+
+				_unitOfWork.UserRepository.Update(user);
+				await _unitOfWork.SaveChangesAsync();
+				return new ServiceResult(200, "Thành Công", new LoginResponseModel()
+				{
+					AccessToken = accessToken,
+					RefreshToken = refreshToken,
+				});
+			}
+			catch (Exception ex)
+			{
+				_unitOfWork.Abort();
+				Console.WriteLine(ex.ToString());
+				return new ServiceResult(500, ex.Message);
+			}
+		}
+
+		public async Task<IServiceResult> Logout(string accessToken)
+		{
+			try
+			{
+				var handler = new JwtSecurityTokenHandler();
+				var token = handler.ReadJwtToken(accessToken);
+				var userId = int.Parse(token.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value);
+				var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+				if (user == null) return new ServiceResult(HttpStatus.NOT_FOUND, "Không tìm thấy");
+				user.RefreshToken = null;
+				user.RefreshTokenExpiry = null;
+				user.DateModified = DateTime.Now;
+				_unitOfWork.UserRepository.Update(user);
+				await _unitOfWork.SaveChangesAsync();
+				return new ServiceResult(HttpStatus.NO_CONTENT);
 			}
 			catch (Exception ex)
 			{

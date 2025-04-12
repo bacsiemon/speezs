@@ -15,10 +15,6 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "public.billing_address",
-         "ObjectType": 0
-      },
-      {
          "Name": "public.collectionlooks",
          "ObjectType": 0
       },

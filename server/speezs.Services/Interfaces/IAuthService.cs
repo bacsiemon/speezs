@@ -7,6 +7,8 @@ namespace speezs.Services.Interfaces
 	{
 		Task<IServiceResult> ForgotPassword(string email);
 		Task<IServiceResult> Login(LoginRequestModel request);
+		Task<IServiceResult> Logout(string accessToken);
+		Task<IServiceResult> RefreshToken(string refreshToken);
 		Task<IServiceResult> Register(RegisterRequest request);
 		Task<IServiceResult> ResetPassword(ResetPasswordRequest request);
 	}

@@ -26,6 +26,7 @@ namespace speezs.DataAccess
 		private RoleRepository _roleRepository;
 		private SubscriptionTierRepository _subscriptionTierRepository;
 		private TransferRepository _transferRepository;
+		private TransactionRepository _transactionRepository;
 		private UserPreferenceRepository _userPreferenceRepository;
 		private UserRepository _userRepository;
 		private UserSubscriptionRepository _userSubscriptionRepository;
@@ -41,6 +42,7 @@ namespace speezs.DataAccess
 		public RoleRepository RoleRepository { get { return _roleRepository ??= new(_db); } }	
 		public SubscriptionTierRepository SubscriptionTierRepository { get { return _subscriptionTierRepository ??= new(_db); } }
 		public TransferRepository TransferRepository { get { return _transferRepository ??= new(_db); } }
+		public TransactionRepository TransactionRepository { get { return _transactionRepository ??= new(_db); } }
 		public UserPreferenceRepository UserPreferenceRepository { get { return _userPreferenceRepository ??= new(_db); } }
 		public UserRepository UserRepository { get { return _userRepository ??= new(_db); } }
 		public UserSubscriptionRepository UserSubscriptionRepository { get { return _userSubscriptionRepository ??= new(_db); } }
