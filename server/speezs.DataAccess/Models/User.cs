@@ -66,9 +66,6 @@ public partial class User
     public DateTime? RefreshTokenExpiry { get; set; }
 
     [InverseProperty("User")]
-    public virtual ICollection<BillingAddress> BillingAddresses { get; set; } = new List<BillingAddress>();
-
-    [InverseProperty("User")]
     public virtual ICollection<Favoritecollection> Favoritecollections { get; set; } = new List<Favoritecollection>();
 
     [InverseProperty("CreatedByNavigation")]

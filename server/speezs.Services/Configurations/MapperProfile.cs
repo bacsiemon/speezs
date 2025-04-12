@@ -4,6 +4,7 @@ using speezs.Services.Models.Look;
 using speezs.Services.Models.MakeupProduct;
 using speezs.Services.Models.Review;
 using speezs.Services.Models.SubscriptionTier;
+using speezs.Services.Models.Transaction;
 using speezs.Services.Models.Transfer;
 using speezs.Services.Models.User;
 using System;
@@ -24,9 +25,10 @@ namespace speezs.Services.Configurations
 			ConfigureTransfer();
 			ConfigureSubscriptionTier();
 			ConfigureReview();
+			ConfigureTransaction();
 		}
 
-		public void ConfigureUser()
+		private void ConfigureUser()
 		{
 			CreateMap<CreateUserRequest, User>();
 			CreateMap<UpdateUserRequest, User>()
@@ -37,7 +39,7 @@ namespace speezs.Services.Configurations
 				.ForMember(dest => dest.ProfileImageUrl, opt => opt.Condition(src => src.ProfileImageUrl != null));
 		}
 
-		public void ConfigureMakeupProduct()
+		private void ConfigureMakeupProduct()
 		{
 			CreateMap<CreateMakeupProductRequest, Makeupproduct>();
 			CreateMap<UpdateMakeupProductRequest, Makeupproduct>()
@@ -51,7 +53,7 @@ namespace speezs.Services.Configurations
 				.ForMember(dest => dest.IsVerified, opt => opt.Condition(src => src.IsVerified != null));
 		}
 
-		public void ConfigureLook()
+		private void ConfigureLook()
 		{
 			CreateMap<CreateLookRequest, Look>();
 			CreateMap<UpdateLookRequest, Look>()
@@ -64,12 +66,12 @@ namespace speezs.Services.Configurations
 			.ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null)); // Only map if source member is not null
 		}
 
-		public void ConfigureTransfer()
+		private void ConfigureTransfer()
 		{
 			CreateMap<CreateTransferRequest, Transfer>();
 		}
 
-		public void ConfigureSubscriptionTier()
+		private void ConfigureSubscriptionTier()
 		{
 			CreateMap<CreateSubscriptionTierRequest, Subscriptiontier>();
 			CreateMap<UpdateSubscriptionTierRequest, Subscriptiontier>()
@@ -90,7 +92,7 @@ namespace speezs.Services.Configurations
 			.ForMember(dest => dest.Usersubscriptions, opt => opt.Ignore());
 		}
 
-		public void ConfigureReview()
+		private void ConfigureReview()
 		{	
 			CreateMap<CreateReviewRequest, Review>()
 				.ForMember(dest => dest.LookId, opt => opt.MapFrom(src => src.LookId))
@@ -117,6 +119,25 @@ namespace speezs.Services.Configurations
 				.ForMember(dest => dest.DateDeleted, opt => opt.Ignore())
 				.ForMember(dest => dest.Look, opt => opt.Ignore())
 				.ForMember(dest => dest.User, opt => opt.Ignore());
+		}
+
+		private void ConfigureTransaction()
+		{
+			CreateMap<CreateTransactionRequest, Transaction>()
+			.ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore Id as it's auto-generated
+			.ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow)) // Set current UTC time
+			.ForMember(dest => dest.CompletedAt, opt => opt.Ignore()) // Initially null
+			.ForMember(dest => dest.Status, opt => opt.MapFrom(_ => "pending")) // Set initial status
+			.ForMember(dest => dest.User, opt => opt.Ignore()) // Ignore navigation property
+															   // Map all other properties directly as they have the same names
+			.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+			.ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Amount))
+			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+			.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+			.ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+			.ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+			.ForMember(dest => dest.ZipCode, opt => opt.MapFrom(src => src.ZipCode))
+			.ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
 		}
 	}
 }

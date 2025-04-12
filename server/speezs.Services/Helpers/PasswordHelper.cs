@@ -12,11 +12,9 @@ namespace speezs.Services.Helpers
 {
 	public class PasswordHelper
 	{
-		private IDistributedCache cache;
-
-		public PasswordHelper(IDistributedCache cache)
+		public PasswordHelper()
 		{
-			this.cache = cache;
+			
 		}
 
 		public string HashPassword(string password, string salt)
@@ -39,16 +37,16 @@ namespace speezs.Services.Helpers
 		public async Task<string> CreateResetPasswordCode(int userId)
 		{
 			var code = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16)).Substring(0,5);
-			await cache.SetRecordAsync<string>($"RESETPASS_{userId}", code);
+			OtpDictionary.SetValue($"RESETPASS_{userId}", code);
 			Console.WriteLine(code);
 			return code;
 		}
 
 		public async Task<bool> CheckResetPasswordCode(int userId, string code)
 		{
-			var result = await cache.GetRecordAsync<string?>($"RESETPASS_{userId}");
+			var result = OtpDictionary.GetValue($"RESETPASS_{userId}");
 			if (result == null || !result.Equals(code)) return false;
-			await cache.RemoveAsync($"RESETPASS_{userId}");
+			OtpDictionary.RemoveValue($"RESETPASS_{userId}");
 			return true;
 		}
 	}

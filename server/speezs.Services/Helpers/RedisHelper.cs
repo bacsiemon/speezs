@@ -10,8 +10,6 @@ namespace speezs.Services.Helpers
 {
 	public static class RedisHelper
 	{
-		
-
 		public static async Task SetRecordAsync<T>(this IDistributedCache cache, string id, T data, TimeSpan? absoluteExpireTime = null,
 			TimeSpan? unusedExpireTime = null)
 		{
