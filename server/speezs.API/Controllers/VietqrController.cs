@@ -10,13 +10,13 @@ using System.Text;
 
 namespace speezs.API.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/[controller]/api")]
 	[ApiController]
-	public class TransactionController : ControllerBase
+	public class VietqrController : ControllerBase
 	{
 		private IConfiguration _configuration;
 
-		public TransactionController(IConfiguration configuration)
+		public VietqrController(IConfiguration configuration)
 		{
 			_configuration = configuration;
 		}
@@ -84,7 +84,7 @@ namespace speezs.API.Controllers
 
 
 		private const string BEARER_PREFIX = "Bearer ";
-		[HttpPost("transaction-sync")]
+		[HttpPost("test/transaction-sync")]
 		public IActionResult TransactionSync([FromBody] TransactionCallback transactionCallback)
 		{
 			// Lấy token từ header Authorization
