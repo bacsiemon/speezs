@@ -199,8 +199,8 @@ namespace speezs.Services
 				transaction.CompletedAt = DateTime.Now;
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
-				if (request.Status.Equals(STATUS_COMPLETED))
-					return await OnTransactionSuccessAsync(transaction.UserId, transaction.SubscriptionTierId.Value);
+				//if (request.Status.Equals(STATUS_COMPLETED))
+				//	return await OnTransactionSuccessAsync(transaction.UserId, transaction.SubscriptionTierId.Value);
 				return new ServiceResult(HttpStatus.OK, "Success", transaction);
 			}
 			catch (Exception ex)
@@ -217,7 +217,7 @@ namespace speezs.Services
 			{
 				var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(Convert.ToInt32(webhookBody.code));
 				if (transaction == null)
-					return new ServiceResult(HttpStatus.NOT_FOUND, "Transaction Not Found");
+					return new ServiceResult(HttpStatus.OK, "Transaction Not Found");
 
 				PayOS payOS = new PayOS(
 						_configuration["PayOS:ClientId"],
