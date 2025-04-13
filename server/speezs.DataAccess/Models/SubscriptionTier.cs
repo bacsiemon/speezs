@@ -57,6 +57,9 @@ public partial class Subscriptiontier
     [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
+    [InverseProperty("SubscriptionTier")]
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
     [InverseProperty("Tier")]
     public virtual ICollection<Usersubscription> Usersubscriptions { get; set; } = new List<Usersubscription>();
 }

@@ -131,7 +131,6 @@ namespace speezs.Services.Configurations
 			.ForMember(dest => dest.User, opt => opt.Ignore()) // Ignore navigation property
 															   // Map all other properties directly as they have the same names
 			.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-			.ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.Amount))
 			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
 			.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
 			.ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))

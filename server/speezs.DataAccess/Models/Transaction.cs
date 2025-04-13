@@ -55,6 +55,17 @@ public partial class Transaction
     [StringLength(50)]
     public string Address { get; set; }
 
+    [Column("subscription_tier_id")]
+    public int? SubscriptionTierId { get; set; }
+
+    [Column("account_number")]
+    [StringLength(30)]
+    public string AccountNumber { get; set; }
+
+    [ForeignKey("SubscriptionTierId")]
+    [InverseProperty("Transactions")]
+    public virtual Subscriptiontier SubscriptionTier { get; set; }
+
     [ForeignKey("UserId")]
     [InverseProperty("Transactions")]
     public virtual User User { get; set; }

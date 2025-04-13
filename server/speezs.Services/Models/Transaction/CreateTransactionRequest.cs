@@ -11,7 +11,7 @@ namespace speezs.Services.Models.Transaction
 	public class CreateTransactionRequest
 	{
 		public int UserId { get; set; }
-		public decimal Amount { get; set; }
+		public int SubscriptionTierId { get; set; }
 
 		[StringLength(100)]
 		public string Description { get; set; }

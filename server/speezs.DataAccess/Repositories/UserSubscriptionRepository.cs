@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Repositories
 {
@@ -13,6 +14,12 @@ namespace speezs.DataAccess.Repositories
 		public UserSubscriptionRepository(SpeezsDbContext context) : base(context)
 		{
 			// Any additional initialization if needed
+		}
+
+		public async Task<Usersubscription?> GetByUserIdAsync(int userId)
+		{
+			return await _context.Usersubscriptions
+				.FirstOrDefaultAsync(us => us.UserId == userId && us.IsDeleted != true);
 		}
 	}
 }

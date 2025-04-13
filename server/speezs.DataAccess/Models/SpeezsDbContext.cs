@@ -141,6 +141,8 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.CompletedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+            entity.HasOne(d => d.SubscriptionTier).WithMany(p => p.Transactions).HasConstraintName("transactions_subscriptiontiers_tier_id_fk");
+
             entity.HasOne(d => d.User).WithMany(p => p.Transactions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("transactions_users_user_id_fk");

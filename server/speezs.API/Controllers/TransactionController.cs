@@ -1,38 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Net.payOS.Types;
+using speezs.Services;
 using speezs.Services.Interfaces;
-using speezs.Services.Models.SubscriptionTier;
+using speezs.Services.Models.Transaction;
 
 namespace speezs.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class SubscriptionTierController : ControllerBase
+	public class TransactionController : ControllerBase
 	{
-		private ISubscriptionTierService _service;
+		private ITransactionService _transactionService;
 
-		public SubscriptionTierController(ISubscriptionTierService subscriptionTierService)
+		public TransactionController(ITransactionService transactionService)
 		{
-			_service = subscriptionTierService;
-		}
-
-		[HttpGet]
-		//[Authorize(Roles = "1")]
-		public async Task<IActionResult> Get()
-		{
-			try
-			{
-				if (!ModelState.IsValid)
-					return BadRequest(ModelState);
-				var response = await _service.GetAllAsync();
-				return StatusCode(response.Status, response.Data ?? response.Message);
-
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-				return StatusCode(500, ex.Message);
-			}
+			_transactionService = transactionService;
 		}
 
 		[HttpGet("{id}")]
@@ -44,7 +27,7 @@ namespace speezs.API.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _service.GetByIdAsync(id);
+				var response = await _transactionService.GetByIdAsync(id);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -56,14 +39,14 @@ namespace speezs.API.Controllers
 
 		[HttpGet("{page}/{size}")]
 		//[Authorize(Roles = "1")]
-		public async Task<IActionResult> Get(int page = 1, int size = 10)
+		public async Task<IActionResult> Get(int page=1, int size=10)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
 
-				var response = await _service.GetPaginateAsync(page, size);
+				var response = await _transactionService.GetPaginateAsync(page, size);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -73,16 +56,14 @@ namespace speezs.API.Controllers
 			}
 		}
 
-		[HttpPost]
-		//[Authorize(Roles = "1")]
-		public async Task<IActionResult> Create(CreateSubscriptionTierRequest request)
+		[HttpPost("payment-requests")]
+		public async Task<IActionResult> Create(CreateTransactionRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
-
-				var response = await _service.CreateAsync(request);
+				var response = await _transactionService.CreateAsync(request);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -92,16 +73,15 @@ namespace speezs.API.Controllers
 			}
 		}
 
-		[HttpPut]
-		//[Authorize(Roles = "1")]
-		public async Task<IActionResult> Update(UpdateSubscriptionTierRequest request)
+
+		[HttpPost("payment-requests/{id}/cancel")]
+		public async Task<IActionResult> CancelTransaction(long orderCode)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
-
-				var response = await _service.UpdateAsync(request);
+				var response = await _transactionService.CancelTransactionAsync(orderCode);
 				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
@@ -111,18 +91,32 @@ namespace speezs.API.Controllers
 			}
 		}
 
-		[HttpDelete]
-		//[Authorize(Roles = "1")]
-		public async Task<IActionResult> Delete(int id)
+		[HttpPost("process")]
+		public async Task<IActionResult> ProcessTransaction([FromQuery]ProcessTransactionRequest request)
 		{
 			try
 			{
 				if (!ModelState.IsValid)
 					return BadRequest(ModelState);
+				var response = await _transactionService.ProcessTransactionAsync(request);
+				return StatusCode(response.Status, response.Data ?? response.Message);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return StatusCode(500, ex.Message);
+			}
+		}
 
-				var response = await _service.DeleteAsync(id);
-				return (response.Status >= 200 && response.Status <= 299) ?
-					NoContent() : StatusCode(response.Status, response.Message);
+		[HttpPost("confirm-webhook")]
+		public async Task<IActionResult> ProcessWebHook([FromBody] WebhookType webhookBody)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+					return BadRequest(ModelState);
+				var response = await _transactionService.ProcessWebHookAsync(webhookBody);
+				return StatusCode(response.Status, response.Data ?? response.Message);
 			}
 			catch (Exception ex)
 			{

@@ -56,7 +56,7 @@ namespace speezs.API.Controllers
 
 		[HttpGet("{page}/{size}")]
 		//[Authorize(Roles = "1,2")]
-		public async Task<IActionResult> Get(int page, int size)
+		public async Task<IActionResult> Get(int page = 1, int size = 10)
 		{
 			try
 			{

@@ -34,6 +34,7 @@ namespace speezs.API.Configurations
 			builder.Services.AddScoped<IMakeupProductService, MakeupProductService>();
 			builder.Services.AddScoped<ILookService, LookService>();
 			builder.Services.AddScoped<ITransferService, TransferService>();
+			builder.Services.AddScoped<ITransactionService, TransactionService>();
 			builder.Services.AddScoped<ISubscriptionTierService, SubscriptionTierService>();
 			builder.Services.AddScoped<IReviewService, ReviewService>();
 			builder.Services.AddScoped<IRoleService, RoleService>();
@@ -107,6 +108,15 @@ namespace speezs.API.Configurations
 					In = ParameterLocation.Header,
 					Type = SecuritySchemeType.Http,
 					Scheme = "Bearer"
+				});
+
+				options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+				{
+					Name = "Authorization",
+					Type = SecuritySchemeType.Http,
+					Scheme = "basic",
+					In = ParameterLocation.Header,
+					Description = "Basic Authorization header using the Basic scheme."
 				});
 
 				options.AddSecurityRequirement(new OpenApiSecurityRequirement
