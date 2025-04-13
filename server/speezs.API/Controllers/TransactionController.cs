@@ -74,8 +74,8 @@ namespace speezs.API.Controllers
 		}
 
 
-		[HttpPost("payment-requests/{id}/cancel")]
-		public async Task<IActionResult> CancelTransaction(long orderCode)
+		[HttpPost("payment-requests/cancel")]
+		public async Task<IActionResult> CancelTransaction([FromQuery] long orderCode)
 		{
 			try
 			{

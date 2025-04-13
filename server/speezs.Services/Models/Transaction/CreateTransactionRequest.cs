@@ -12,12 +12,13 @@ namespace speezs.Services.Models.Transaction
 	{
 		public int UserId { get; set; }
 		public int SubscriptionTierId { get; set; }
-
-		[StringLength(100)]
 		public string Description { get; set; }
 
 		[StringLength(30)]
 		public string FullName { get; set; }
+
+		public string ReturnUrl { get; set; }
+		public string CancelUrl { get; set; }
 
 		[StringLength(20)]
 		public string Country { get; set; }

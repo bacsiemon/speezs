@@ -109,7 +109,9 @@ namespace speezs.Services
 				entity.Status = STATUS_PENDING;
 				entity.Amount = subscriptionTier.Price;
 				entity.SubscriptionTierId = request.SubscriptionTierId;
+				entity.Description = request.Description;
 				_unitOfWork.TransactionRepository.Create(entity);
+				await _unitOfWork.SaveChangesAsync();
 
 				PayOS payOS = new PayOS(
 					_configuration["PayOS:ClientId"],
@@ -127,14 +129,13 @@ namespace speezs.Services
 				var paymentData = new Net.payOS.Types.PaymentData(
 					orderCode: Convert.ToInt64(entity.Id),
 					amount: Convert.ToInt32(subscriptionTier.Price),
-					description: $"SPEEZS_{entity.Description}",
+					description: $"SPEEZS_{request.UserId}_{entity.Description}",
 					items: items,
-					cancelUrl: _configuration["PayOS:CancelUrl"],
-					returnUrl: _configuration["PayOS:ReturnUrl"]
+					cancelUrl: request.CancelUrl,
+					returnUrl: request.ReturnUrl
 					);
 				var result = await payOS.createPaymentLink(paymentData);
-				await _unitOfWork.SaveChangesAsync();
-				return new ServiceResult(HttpStatus.OK, "Success", result);
+				return new ServiceResult(HttpStatus.OK, "Success", result.checkoutUrl);
 			}
 			catch (Exception ex)
 			{
@@ -163,7 +164,7 @@ namespace speezs.Services
 					return new ServiceResult(HttpStatus.NOT_FOUND, "OrderCode Not Found");
 
 				transaction.Status = STATUS_CANCELED;
-				transaction.CompletedAt = DateTime.UtcNow.AddHours(7);
+				transaction.CompletedAt = DateTime.Now;
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(HttpStatus.OK, "Success");
@@ -183,7 +184,7 @@ namespace speezs.Services
 				var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(Convert.ToInt32(request.OrderCode));
 				if (transaction == null)
 					return new ServiceResult(HttpStatus.NOT_FOUND, "Transaction Not Found");
-				transaction.Status = STATUS_PROCESSING;
+				transaction.Status = request.Status;
 				transaction.Description = request.Id;
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
@@ -195,10 +196,11 @@ namespace speezs.Services
 
 				var linkInfo = await payOS.getPaymentLinkInformation(request.OrderCode);
 				transaction.Status = linkInfo.status;
-				transaction.CompletedAt = DateTime.UtcNow.AddHours(7);
-				transaction.Description = request.Id;
+				transaction.CompletedAt = DateTime.Now;
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
+				if (request.Status.Equals(STATUS_COMPLETED))
+					return await OnTransactionSuccessAsync(transaction.UserId, transaction.SubscriptionTierId.Value);
 				return new ServiceResult(HttpStatus.OK, "Success", transaction);
 			}
 			catch (Exception ex)
@@ -247,19 +249,23 @@ namespace speezs.Services
 		{
 			try
 			{
-				var userSubscription = new Usersubscription()
-				{
-					UserId = userId,
-					TierId = tierId,
-					StartDate = DateTime.UtcNow.AddHours(7),
-					EndDate = DateTime.UtcNow.AddHours(7).AddDays(30),
-					Status = STATUS_COMPLETED,
-					PaymentMethod = "Chuyển Khoản",
-					AutoRenew = false,
-					LastBillingDate = DateTime.UtcNow.AddHours(7),
-					NextBillingDate = DateTime.UtcNow.AddHours(7).AddDays(30),
-				};
-				_unitOfWork.UserSubscriptionRepository.Create(userSubscription);
+				var userSubscription = await _unitOfWork.UserSubscriptionRepository.GetByUserIdAsync(userId);
+				bool isCreate = userSubscription == null;
+				if (userSubscription == null)
+					userSubscription = new();
+					userSubscription.UserId = userId;
+					userSubscription.TierId = tierId;
+					userSubscription.StartDate = DateTime.Now;
+					userSubscription.EndDate = DateTime.Now.AddDays(30);
+					userSubscription.Status = STATUS_COMPLETED;
+					userSubscription.PaymentMethod = "Chuyển Khoản";
+					userSubscription.AutoRenew = false;
+					userSubscription.LastBillingDate = DateTime.Now;
+					userSubscription.NextBillingDate = DateTime.Now.AddDays(30);
+				if (isCreate)	
+					_unitOfWork.UserSubscriptionRepository.Create(userSubscription);
+				else
+					_unitOfWork.UserSubscriptionRepository.Update(userSubscription);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(HttpStatus.OK, "Success");
 			}
