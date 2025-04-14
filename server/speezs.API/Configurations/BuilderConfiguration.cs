@@ -32,6 +32,7 @@ namespace speezs.API.Configurations
 			builder.Services.AddScoped<IAuthService, AuthService>();
 			builder.Services.AddScoped<IUserService, UserService>();
 			builder.Services.AddScoped<IMakeupProductService, MakeupProductService>();
+			builder.Services.AddScoped<IImageService, ImageService>();
 			builder.Services.AddScoped<ILookService, LookService>();
 			builder.Services.AddScoped<ITransferService, TransferService>();
 			builder.Services.AddScoped<ITransactionService, TransactionService>();

@@ -19,6 +19,7 @@ namespace speezs.DataAccess
 
 		private CollectionLookRepository _collectionLookRepository;
 		private FavoriteCollectionRepository _favoriteCollectionRepository;
+		private ImageRepository _imageRepository;
 		private LookProductRepository _lookProductRepository;
 		private LookRepository _lookRepository;
 		private MakeupProductRepository _makeupProductRepository;
@@ -35,6 +36,7 @@ namespace speezs.DataAccess
 
 		public CollectionLookRepository CollectionLookRepository { get { return _collectionLookRepository ??= new(_db); } }
 		public FavoriteCollectionRepository FavoriteCollectionRepository { get { return _favoriteCollectionRepository ??= new(_db); } }
+		public ImageRepository ImageRepository { get { return _imageRepository ??= new(_db); } }
 		public LookProductRepository LookProductRepository { get { return _lookProductRepository ??= new(_db); } }	
 		public LookRepository LookRepository { get { return _lookRepository ??= new(_db); } }
 		public MakeupProductRepository MakeupProductRepository { get { return _makeupProductRepository ??= new(_db); } }

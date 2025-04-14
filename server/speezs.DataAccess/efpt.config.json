@@ -23,6 +23,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "public.images",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.lookproducts",
          "ObjectType": 0
       },

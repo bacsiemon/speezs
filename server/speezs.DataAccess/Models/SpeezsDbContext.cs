@@ -17,6 +17,8 @@ public partial class SpeezsDbContext : DbContext
 
     public virtual DbSet<Favoritecollection> Favoritecollections { get; set; }
 
+    public virtual DbSet<Image> Images { get; set; }
+
     public virtual DbSet<Look> Looks { get; set; }
 
     public virtual DbSet<Lookproduct> Lookproducts { get; set; }
@@ -70,6 +72,13 @@ public partial class SpeezsDbContext : DbContext
             entity.Property(e => e.IsPrivate).HasDefaultValue(false);
 
             entity.HasOne(d => d.User).WithMany(p => p.Favoritecollections).HasConstraintName("favoritecollections_user_id_fkey");
+        });
+
+        modelBuilder.Entity<Image>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("images_pk");
+
+            entity.Property(e => e.UploadedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
         modelBuilder.Entity<Look>(entity =>

@@ -196,7 +196,6 @@ namespace speezs.Services
 
 				var linkInfo = await payOS.getPaymentLinkInformation(request.OrderCode);
 				transaction.Status = linkInfo.status;
-				transaction.CompletedAt = DateTime.Now;
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
 				//if (request.Status.Equals(STATUS_COMPLETED))
@@ -227,7 +226,7 @@ namespace speezs.Services
 				WebhookData webhookData = payOS.verifyPaymentWebhookData(webhookBody);
 				transaction.Status = webhookBody.success ? STATUS_COMPLETED : STATUS_FAILED;
 				transaction.AccountNumber = webhookData.accountNumber;
-
+				transaction.CompletedAt = DateTime.Now;
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
 
