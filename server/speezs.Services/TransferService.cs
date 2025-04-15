@@ -167,7 +167,7 @@ namespace speezs.Services
 				}
 				_unitOfWork.ImageRepository.Create(image);
 				await _unitOfWork.SaveChangesAsync();
-				return $"https://speezsai.com/api/image/{image.Id}";
+				return $"https://api.speezsai.com/api/image/{image.Id}";
 			}
 			catch (Exception ex)
 			{

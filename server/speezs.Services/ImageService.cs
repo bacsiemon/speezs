@@ -65,7 +65,7 @@ namespace speezs.Services
 				_unitOfWork.ImageRepository.Create(image);
 				await _unitOfWork.SaveChangesAsync();
 
-				return new ServiceResult(200, "Success", $"api/image/{image.Id}");
+				return new ServiceResult(200, "Success", $"https://api.speezsai.com/api/image/{image.Id}");
 			}
 			catch (Exception ex)
 			{
@@ -100,7 +100,7 @@ namespace speezs.Services
 				_unitOfWork.ImageRepository.Create(image);
 				await _unitOfWork.SaveChangesAsync();
 
-				return new ServiceResult(200, "Success", $"https://speezsai.com/api/image/{image.Id}");
+				return new ServiceResult(200, "Success", $"https://api.speezsai.com/api/image/{image.Id}");
 			}
 			catch (Exception ex)
 			{
