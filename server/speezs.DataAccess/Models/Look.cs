@@ -56,6 +56,10 @@ public partial class Look
     [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
+    [Column("color")]
+    [StringLength(9)]
+    public string Color { get; set; }
+
     [InverseProperty("Look")]
     public virtual ICollection<Collectionlook> Collectionlooks { get; set; } = new List<Collectionlook>();
 

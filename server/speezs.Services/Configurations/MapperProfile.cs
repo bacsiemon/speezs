@@ -63,6 +63,7 @@ namespace speezs.Services.Configurations
 			.ForMember(dest => dest.IsPublic, opt => opt.MapFrom(src => src.IsPublic))
 			.ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
 			.ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => src.ThumbnailUrl))
+			.ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Color))
 			.ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null)); // Only map if source member is not null
 		}
 

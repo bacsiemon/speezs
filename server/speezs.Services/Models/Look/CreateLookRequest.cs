@@ -14,5 +14,6 @@ namespace speezs.Services.Models.Look
 		public bool? IsPublic { get; set; }
 		public string Category { get; set; }
 		public string ThumbnailUrl { get; set; }
+		public string Color { get; set; }
 	}
 }

@@ -49,6 +49,46 @@ namespace speezs.Services
 				{
 					return new ServiceResult(400, "Image cannot be empty");
 				}
+
+				if (request.Length > 10 * 1024 * 1024)
+				{
+					return new ServiceResult(400, "Image size cannot exceed 10MB");
+				}
+				var image = new Image();
+				image.ContentType = request.ContentType;
+				image.UploadedAt = DateTime.Now;
+				using (var ms = new MemoryStream())
+				{
+					await request.CopyToAsync(ms);
+					image.Data = ms.ToArray();
+				}
+				_unitOfWork.ImageRepository.Create(image);
+				await _unitOfWork.SaveChangesAsync();
+
+				return new ServiceResult(200, "Success", $"api/image/{image.Id}");
+			}
+			catch (Exception ex)
+			{
+				_unitOfWork.Abort();
+				Console.WriteLine(ex.ToString());
+				return new ServiceResult(500, ex.Message);
+			}
+		}
+
+
+		public async Task<IServiceResult> TransferTestAsync(IFormFile request)
+		{
+			try
+			{
+				if (request.Length == 0)
+				{
+					return new ServiceResult(400, "Image cannot be empty");
+				}
+
+				if (request.Length > 10 * 1024 * 1024)
+				{
+					return new ServiceResult(400, "Image size cannot exceed 10MB");
+				}
 				var image = new Image();
 				image.ContentType = request.ContentType;
 				image.UploadedAt = DateTime.Now;

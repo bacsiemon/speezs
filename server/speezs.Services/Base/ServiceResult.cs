@@ -11,8 +11,8 @@ namespace speezs.Services.Base
         int Status { get; set; }
         string? Message { get; set; }
         object? Data { get; set; }
-
-    }
+		bool IsSuccess();
+	}
 
     public class ServiceResult : IServiceResult
     {
@@ -43,5 +43,9 @@ namespace speezs.Services.Base
             Message = message;
             Data = data;
         }
+
+
+		public bool IsSuccess()
+			=> Status < 400;
     }
 }
