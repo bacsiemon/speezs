@@ -17,26 +17,21 @@ public partial class Makeupproduct
 
     [Required]
     [Column("name")]
-    [StringLength(255)]
     public string Name { get; set; }
 
     [Column("brand")]
-    [StringLength(100)]
     public string Brand { get; set; }
 
     [Column("category")]
-    [StringLength(50)]
     public string Category { get; set; }
 
     [Column("color_code")]
-    [StringLength(7)]
     public string ColorCode { get; set; }
 
     [Column("description")]
     public string Description { get; set; }
 
     [Column("image_url")]
-    [StringLength(255)]
     public string ImageUrl { get; set; }
 
     [Column("is_verified")]
