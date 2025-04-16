@@ -118,6 +118,7 @@ namespace speezs.Services
 					_configuration["PayOS:ApiKey"],
 					_configuration["PayOS:ChecksumKey"]);
 
+				var randomString = Guid.NewGuid().ToString().Substring(0,10);
 
 				var items = new List<Net.payOS.Types.ItemData>()
 					{
@@ -129,7 +130,7 @@ namespace speezs.Services
 				var paymentData = new Net.payOS.Types.PaymentData(
 					orderCode: Convert.ToInt64(entity.Id),
 					amount: Convert.ToInt32(subscriptionTier.Price),
-					description: $"SPEEZS_{request.UserId}_{entity.Description}",
+					description: $"SPEEZS_{request.UserId}_{entity.Description}_{randomString}",
 					items: items,
 					cancelUrl: request.CancelUrl,
 					returnUrl: request.ReturnUrl
