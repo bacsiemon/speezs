@@ -199,9 +199,9 @@ namespace speezs.Services
 				transaction.Status = linkInfo.status;
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
-				//if (request.Status.Equals(STATUS_COMPLETED))
-				//	return await OnTransactionSuccessAsync(transaction.UserId, transaction.SubscriptionTierId.Value);
-				return new ServiceResult(HttpStatus.OK, "Success", transaction);
+				if (request.Status.Equals(STATUS_COMPLETED))
+					return await OnTransactionSuccessAsync(transaction.UserId, transaction.SubscriptionTierId.Value);
+				return new ServiceResult(HttpStatus.OK, "Success");
 			}
 			catch (Exception ex)
 			{
@@ -231,10 +231,10 @@ namespace speezs.Services
 				_unitOfWork.TransactionRepository.Update(transaction);
 				await _unitOfWork.SaveChangesAsync();
 
-				if (!webhookBody.success)
-					return new ServiceResult(HttpStatus.OK, "Thành Công");
-				return await OnTransactionSuccessAsync(transaction.UserId, transaction.SubscriptionTierId.Value);
-
+				//if (!webhookBody.success)
+				//	return new ServiceResult(HttpStatus.OK, "Thành Công");
+				//return await OnTransactionSuccessAsync(transaction.UserId, transaction.SubscriptionTierId.Value);
+				return new ServiceResult(HttpStatus.OK, "Thành Công");
 			}
 			catch (Exception ex)
 			{
