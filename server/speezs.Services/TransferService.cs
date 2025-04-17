@@ -20,12 +20,14 @@ namespace speezs.Services
 		private UnitOfWork _unitOfWork;
 		private IMapper _mapper;
 		private IImageService _imageService;
+		private IUserSubscriptionService _userSubscriptionService;
 
-		public TransferService(UnitOfWork unitOfWork, IMapper mapper, IImageService imageService)
+		public TransferService(UnitOfWork unitOfWork, IMapper mapper, IImageService imageService, IUserSubscriptionService userSubscriptionService)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 			_imageService = imageService;
+			_userSubscriptionService = userSubscriptionService;
 		}
 
 		public async Task<IServiceResult> GetAllAsync()
@@ -80,6 +82,13 @@ namespace speezs.Services
 				var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
 				if (user == null)
 					return new ServiceResult(404, "User not found");
+
+				var userSubscription = _userSubscriptionService.GetByUserIdAsync(request.UserId).Result.Data as DataAccess.Models.Usersubscription;
+				if (userSubscription == null)
+					return new ServiceResult(404, "Subscription not found");
+				if (userSubscription.TransfersLeft.GetValueOrDefault() == 0)
+					return new ServiceResult(500, "No Transfers left");
+
 				//var userSubscription = await _unitOfWork.UserSubscriptionRepository.GetByUserIdAsync(request.UserId);
 				var watch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -101,8 +110,10 @@ namespace speezs.Services
 				entity.Status = "Success";
 				entity.ProcessingTime = Convert.ToDecimal(watch.ElapsedMilliseconds / 1000);
 				entity.AiModelVersion = "v1.0";
-
 				_unitOfWork.TransferRepository.Create(entity);
+
+				userSubscription.TransfersLeft--;
+				_unitOfWork.UserSubscriptionRepository.Update(userSubscription);
 				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(200, "Success", entity);
 			}

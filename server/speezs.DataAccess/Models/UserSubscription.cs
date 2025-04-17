@@ -60,6 +60,9 @@ public partial class Usersubscription
     [Column("date_deleted", TypeName = "timestamp without time zone")]
     public DateTime? DateDeleted { get; set; }
 
+    [Column("transfers_left")]
+    public int? TransfersLeft { get; set; }
+
     [ForeignKey("TierId")]
     [InverseProperty("Usersubscriptions")]
     public virtual Subscriptiontier Tier { get; set; }

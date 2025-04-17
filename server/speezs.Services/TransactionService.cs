@@ -262,6 +262,7 @@ namespace speezs.Services
 					userSubscription.AutoRenew = false;
 					userSubscription.LastBillingDate = DateTime.Now;
 					userSubscription.NextBillingDate = DateTime.Now.AddDays(30);
+					userSubscription.TransfersLeft = userSubscription.TransfersLeft.HasValue ? userSubscription.TransfersLeft+150 : 150;
 				if (isCreate)	
 					_unitOfWork.UserSubscriptionRepository.Create(userSubscription);
 				else

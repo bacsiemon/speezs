@@ -40,6 +40,7 @@ namespace speezs.API.Configurations
 			builder.Services.AddScoped<IReviewService, ReviewService>();
 			builder.Services.AddScoped<IRoleService, RoleService>();
 			builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+			builder.Services.AddScoped<IUserSubscriptionService, UserSubscriptionService>();
 		}
 
 		public static void ConfigureServices(WebApplicationBuilder builder)

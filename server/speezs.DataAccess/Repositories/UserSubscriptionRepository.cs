@@ -18,8 +18,11 @@ namespace speezs.DataAccess.Repositories
 
 		public async Task<Usersubscription?> GetByUserIdAsync(int userId)
 		{
-			return await _context.Usersubscriptions
-				.FirstOrDefaultAsync(us => us.UserId == userId && us.IsDeleted != true);
+			return await _context.Usersubscriptions.OrderBy(u => u.UserSubscriptionId)
+				.LastOrDefaultAsync(us => us.UserId == userId && us.IsDeleted != true);
 		}
+
+
+		
 	}
 }
