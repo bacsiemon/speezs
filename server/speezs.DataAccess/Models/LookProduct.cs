@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Models;
@@ -20,20 +21,6 @@ public partial class Lookproduct
 
     [Column("product_id")]
     public int? ProductId { get; set; }
-
-    [Column("application_area")]
-    [StringLength(50)]
-    public string ApplicationArea { get; set; }
-
-    [Column("intensity")]
-    [Precision(3, 2)]
-    public decimal? Intensity { get; set; }
-
-    [Column("application_order")]
-    public int? ApplicationOrder { get; set; }
-
-    [Column("notes")]
-    public string Notes { get; set; }
 
     [Column("is_deleted")]
     public bool? IsDeleted { get; set; }

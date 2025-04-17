@@ -128,6 +128,16 @@ namespace speezs.Services
 			}
 		}
 
-		
+		public async Task<IServiceResult> GetByLookIdAsync(int lookId)
+		{
+			try
+			{
+				return new ServiceResult(200, "Success", await _unitOfWork.MakeupProductRepository.GetByLookIdAsync(lookId));
+			}
+			catch (Exception ex)
+			{
+				return new ServiceResult(500, ex.Message);
+			}
+		}
 	}
 }

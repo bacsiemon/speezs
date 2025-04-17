@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace speezs.DataAccess.Repositories
 {
@@ -12,6 +13,12 @@ namespace speezs.DataAccess.Repositories
 	{
 		public MakeupProductRepository(SpeezsDbContext context) : base(context)
 		{
+		}
+
+		public async Task<List<Makeupproduct>> GetByLookIdAsync(int lookId)
+		{
+			return await _context.Makeupproducts.Include(x => x.Lookproducts).Where(x =>x.Lookproducts.Any(y => y.LookId == lookId))
+				.ToListAsync();
 		}
 	}
 }

@@ -11,10 +11,12 @@ namespace speezs.API.Controllers
 	public class LookController : ControllerBase
 	{
 		private ILookService _lookService;
+		private IMakeupProductService _makeupProductService;
 
-		public LookController(ILookService LookService)
+		public LookController(ILookService LookService, IMakeupProductService makeupProductService)
 		{
 			_lookService = LookService;
+			_makeupProductService = makeupProductService;
 		}
 
 		[HttpGet]
@@ -54,6 +56,26 @@ namespace speezs.API.Controllers
 				return StatusCode(500, ex.Message);
 			}
 		}
+
+		[HttpGet("{id}/makeup-products")]
+		//[Authorize(Roles = "1,2")]
+		public async Task<IActionResult> GetMakeupProducts(int id)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+					return BadRequest(ModelState);
+
+				var response = await _makeupProductService.GetByLookIdAsync(id);
+				return StatusCode(response.Status, response.Data ?? response.Message);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+				return StatusCode(500, ex.Message);
+			}
+		}
+
 
 		[HttpGet("{page}/{size}")]
 		//[Authorize(Roles = "1,2")]

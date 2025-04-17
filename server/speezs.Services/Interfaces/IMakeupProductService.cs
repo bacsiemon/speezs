@@ -9,6 +9,7 @@ namespace speezs.Services.Interfaces
 		Task<IServiceResult> DeleteAsync(int id);
 		Task<IServiceResult> GetAllAsync();
 		Task<IServiceResult> GetByIdAsync(int id);
+		Task<IServiceResult> GetByLookIdAsync(int lookId);
 		Task<IServiceResult> GetPaginateAsync(int page, int size);
 		Task<IServiceResult> UpdateAsync(UpdateMakeupProductRequest request);
 	}
