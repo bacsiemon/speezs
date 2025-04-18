@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace speezs.Services
@@ -97,16 +98,16 @@ namespace speezs.Services
 					return processingResult;
 
 				var sourceUrl = processingResult.Data as string;
-				//var resultUrl = await ProcessImageAsync(request.Image, look.Color);
-				//if (resultUrl.IsNullOrEmpty())
-				//	return new ServiceResult(500, "Image processing failed");
+				var resultUrl = await ProcessImageAsync(request.Image, "vFG137.png");
+				if (resultUrl.IsNullOrEmpty())
+					return new ServiceResult(500, "Image processing failed");
 
 				watch.Stop();
 				var entity = new Transfer();
 				entity.UserId = request.UserId;
 				entity.LookId = request.LookId;
 				entity.SourceImageUrl = sourceUrl;
-				entity.ResultImageUrl = sourceUrl; //resultUrl;
+				entity.ResultImageUrl = resultUrl; //resultUrl;
 				entity.Status = "Success";
 				entity.ProcessingTime = Convert.ToDecimal(watch.ElapsedMilliseconds / 1000);
 				entity.AiModelVersion = "v1.0";
@@ -150,7 +151,7 @@ namespace speezs.Services
 			try
 			{
 				HttpClient httpClient = new HttpClient();
-				httpClient.BaseAddress = new Uri("http://localhost:8000");
+				httpClient.BaseAddress = new Uri("https://speezsaimodel.azurewebsites.net");
 				using var multipartContent = new MultipartFormDataContent();
 				using var streamContent = new StreamContent(request.OpenReadStream());
 				streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");
@@ -158,16 +159,20 @@ namespace speezs.Services
 				// Add the file to the form data
 				multipartContent.Add(
 					streamContent,
-					"file",  // form field name
+					"no_makeup",  // form field name
 					request.FileName
 				);
 
-				var response = await httpClient.PostAsync($"/process-image/?color={color}", multipartContent);
+				multipartContent.Add(new StringContent(color), "makeup_template");
+
+
+				var response = await httpClient.PostAsync($"/apply-makeup/", multipartContent);
 				if (!response.IsSuccessStatusCode)
 				{
+					Console.WriteLine(response.Content);
 					return null;
 				}
-				byte[] responseData = await response.Content.ReadAsByteArrayAsync();
+				byte[] responseData = Convert.FromBase64String(JsonDocument.Parse(response.Content.ReadAsStringAsync().Result).RootElement.GetProperty("image_base64").GetString());
 
 				var image = new Image();
 				image.ContentType = request.ContentType;
