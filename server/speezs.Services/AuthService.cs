@@ -64,7 +64,7 @@ namespace speezs.Services
 			{
 				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
-				return new ServiceResult(500, ex.Message);
+				return new ServiceResult(500, ex.ToString());
 			}
 		}
 
@@ -101,7 +101,7 @@ namespace speezs.Services
 			{
 				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
-				return new ServiceResult(500, ex.Message);
+				return new ServiceResult(500, ex.ToString());
 			}
 		}
 
@@ -127,7 +127,7 @@ namespace speezs.Services
 			{
 				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
-				return new ServiceResult(500, ex.Message);
+				return new ServiceResult(500, ex.ToString());
 			}
 		}
 
@@ -154,7 +154,7 @@ namespace speezs.Services
 			{
 				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
-				return new ServiceResult(500, ex.Message);
+				return new ServiceResult(500, ex.ToString());
 			}
 		}
 
@@ -184,7 +184,7 @@ namespace speezs.Services
 			{
 				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
-				return new ServiceResult(500, ex.Message);
+				return new ServiceResult(500, ex.ToString());
 			}
 		}
 
@@ -208,7 +208,7 @@ namespace speezs.Services
 			{
 				_unitOfWork.Abort();
 				Console.WriteLine(ex.ToString());
-				return new ServiceResult(500, ex.Message);
+				return new ServiceResult(500, ex.ToString());
 			}
 		}
 
