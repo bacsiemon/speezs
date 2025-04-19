@@ -109,7 +109,7 @@ namespace speezs.Services
 				entity.Status = STATUS_PENDING;
 				entity.Amount = subscriptionTier.Price;
 				entity.SubscriptionTierId = request.SubscriptionTierId;
-				entity.Description = request.Description;
+				entity.Description = "Premium";
 				_unitOfWork.TransactionRepository.Create(entity);
 				await _unitOfWork.SaveChangesAsync();
 
@@ -130,7 +130,7 @@ namespace speezs.Services
 				var paymentData = new Net.payOS.Types.PaymentData(
 					orderCode: Convert.ToInt64(entity.Id),
 					amount: Convert.ToInt32(subscriptionTier.Price),
-					description: $"SPEEZS_{request.UserId}_{entity.Description}_{randomString}",
+					description: $"SPEEZS_{request.UserId}_Premium_{randomString}",
 					items: items,
 					cancelUrl: request.CancelUrl,
 					returnUrl: request.ReturnUrl
