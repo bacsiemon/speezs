@@ -57,7 +57,7 @@ public partial class Look
     public DateTime? DateDeleted { get; set; }
 
     [Column("color")]
-    [StringLength(9)]
+    [StringLength(20)]
     public string Color { get; set; }
 
     [InverseProperty("Look")]

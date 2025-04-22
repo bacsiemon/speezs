@@ -98,7 +98,7 @@ namespace speezs.Services
 					return processingResult;
 
 				var sourceUrl = processingResult.Data as string;
-				var resultUrl = await ProcessImageAsync(request.Image, "vFG137.png");
+				var resultUrl = await ProcessImageAsync(request.Image, look.Color);
 				if (resultUrl.IsNullOrEmpty())
 					return new ServiceResult(500, "Image processing failed");
 

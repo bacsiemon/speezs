@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Net.payOS;
@@ -136,6 +137,10 @@ namespace speezs.Services
 					returnUrl: request.ReturnUrl
 					);
 				var result = await payOS.createPaymentLink(paymentData);
+
+				entity.Description = result.paymentLinkId;
+				_unitOfWork.TransactionRepository.Update(entity);
+				await _unitOfWork.SaveChangesAsync();
 				return new ServiceResult(HttpStatus.OK, "Success", result.checkoutUrl);
 			}
 			catch (Exception ex)
