@@ -58,6 +58,7 @@ namespace speezs.Services
 				{
 					AccessToken = accessToken,
 					RefreshToken = refreshToken,
+					UserId = user.UserId
 				});
 			}
 			catch (Exception ex)
