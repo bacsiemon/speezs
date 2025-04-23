@@ -224,6 +224,7 @@ namespace speezs.Services
 					new System.Security.Claims.Claim("UserId", user.UserId.ToString()),
 					new System.Security.Claims.Claim(ClaimTypes.Name, user.FullName),
 					new System.Security.Claims.Claim(ClaimTypes.Email, user.Email),
+					new System.Security.Claims.Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
 					new System.Security.Claims.Claim(ClaimTypes.Role, userRole.RoleId.ToString()),
 				}),
 				Expires = DateTime.Now.AddMinutes(120),
